@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Transaction;
+use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportController extends Controller
 {
@@ -15,20 +18,20 @@ class ReportController extends Controller
         $months = [];
         
         for ($m = 1; $m <= 12; $m++) {
-            $date = \Carbon\Carbon::create($year, $m, 1);
+            $date = Carbon::create($year, $m, 1);
             
             // Get stats for this month
-            $totalIn = \App\Models\Transaction::where('trx_type', 'masuk')
+            $totalIn = Transaction::where('trx_type', 'masuk')
                 ->whereYear('trx_date', $year)
                 ->whereMonth('trx_date', $m)
                 ->sum('quantity');
                 
-            $totalOut = \App\Models\Transaction::where('trx_type', 'keluar')
+            $totalOut = Transaction::where('trx_type', 'keluar')
                 ->whereYear('trx_date', $year)
                 ->whereMonth('trx_date', $m)
                 ->sum('quantity');
                 
-            $trxCount = \App\Models\Transaction::whereYear('trx_date', $year)
+            $trxCount = Transaction::whereYear('trx_date', $year)
                 ->whereMonth('trx_date', $m)
                 ->count();
                 
@@ -72,15 +75,15 @@ class ReportController extends Controller
             abort(404);
         }
         
-        $monthName = \Carbon\Carbon::create($year, $month, 1)->translatedFormat('F');
-        $transactions = \App\Models\Transaction::with(['inventory.variety', 'inventory.location'])
+        $monthName = Carbon::create($year, $month, 1)->translatedFormat('F');
+        $transactions = Transaction::with(['inventory.variety', 'inventory.location'])
             ->whereYear('trx_date', $year)
             ->whereMonth('trx_date', $month)
             ->orderBy('trx_date', 'asc')
             ->get();
             
         // Generate Analytics Data
-        $daysInMonth = \Carbon\Carbon::create($year, $month, 1)->daysInMonth;
+        $daysInMonth = Carbon::create($year, $month, 1)->daysInMonth;
         $labels = [];
         $masukData = [];
         $keluarData = [];
@@ -92,7 +95,7 @@ class ReportController extends Controller
         }
 
         foreach ($transactions as $trx) {
-            $dayIndex = intval(\Carbon\Carbon::parse($trx->trx_date)->format('d')) - 1;
+            $dayIndex = intval(Carbon::parse($trx->trx_date)->format('d')) - 1;
             if ($trx->trx_type == 'masuk') {
                 $masukData[$dayIndex] += floatval($trx->quantity);
             } else {
@@ -139,7 +142,7 @@ class ReportController extends Controller
         $chartContents = @file_get_contents($chartUrlRaw, false, $ctx);
         $chartUrl = $chartContents ? 'data:image/png;base64,' . base64_encode($chartContents) : null;
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.pdf', compact('transactions', 'monthName', 'year', 'chartUrl'));
+        $pdf =  Pdf::loadView('reports.pdf', compact('transactions', 'monthName', 'year', 'chartUrl'));
         $pdf->setPaper('A4', 'portrait');
         
         $pdfFileName = "Laporan_Bulanan_{$monthName}_{$year}.pdf";

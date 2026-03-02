@@ -33,11 +33,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="mb-3">
-                                <label for="batch_code" class="form-label">Kode Batch</label>
-                                <input type="text" class="form-control" id="batch_code" name="batch_code" value="{{ old('batch_code') }}"
-                                    placeholder="Contoh: BATCH-2023-001" required>
-                            </div>
+
                             <div class="mb-3">
                                 <label for="expiry_date" class="form-label">Tanggal Kadaluarsa</label>
                                 <input type="date" class="form-control" id="expiry_date" name="expiry_date"

@@ -24,6 +24,13 @@ class DashboardController extends Controller
             ->orderBy('expiry_date')
             ->get();
 
-        return view('welcome', compact('total_varieties', 'total_stock', 'recent_transactions', 'stock_by_expiry'));
+        $low_stock_count = $stock_by_expiry->filter(function($item) {
+            return $item->total_quantity < 100 || \Carbon\Carbon::parse($item->expiry_date)->isPast() || \Carbon\Carbon::parse($item->expiry_date)->lte(now()->addMonths(3));
+        })->count();
+
+        $trx_in = Transaction::where('trx_type', 'masuk')->count();
+        $trx_out = Transaction::where('trx_type', 'keluar')->count();
+
+        return view('welcome', compact('total_varieties', 'total_stock', 'recent_transactions', 'stock_by_expiry', 'low_stock_count', 'trx_in', 'trx_out'));
     }
 }

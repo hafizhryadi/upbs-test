@@ -51,11 +51,13 @@ class InventoryController extends Controller
         $validated = $request->validate([
             'variety_id' => 'required|exists:varieties,id',
             'location_id' => 'required|exists:locations,id',
-            'batch_code' => 'required|string|max:255',
             'expiry_date' => 'required|date',
             'status' => 'required|in:ready,packing,hold,expired',
             'quantity' => 'required|integer|min:0',
         ]);
+        
+        $validated['batch_code'] = 'BATCH-' . strtoupper(\Illuminate\Support\Str::random(8));
+        
         Inventory::create($validated);
         return redirect()->route('inventories.index')->with('success', 'Inventory created successfully.');
     }
@@ -87,7 +89,6 @@ class InventoryController extends Controller
         $validated = $request->validate([
             'variety_id' => 'required|exists:varieties,id',
             'location_id' => 'required|exists:locations,id',
-            'batch_code' => 'required|string|max:255',
             'expiry_date' => 'required|date',
             'status' => 'required|in:ready,packing,hold,expired',
             'quantity' => 'required|integer|min:0',

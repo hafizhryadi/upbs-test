@@ -106,7 +106,7 @@
     }
 
     .polaroid-1 { transform: rotate(-5deg); top: 20px; z-index: 3; }
-    .polaroid-2 { transform: rotate(3deg); margin-top: -50px; z-index: 2; }
+    .polaroid-2 { transform: rotate(3deg); margin-top: -30px; z-index: 2; }
     .polaroid-3 { transform: rotate(7deg); top: 30px; z-index: 4; }
 
     /* Sections */
@@ -189,13 +189,13 @@
         <div class="row align-items-center">
             <div class="col-lg-12 text-center" data-aos="fade-up" data-aos-duration="1000">
                 <h1 class="hero-title mb-4">Unit Pengelola Benih Sumber<br>(UPBS) BRMP SumSel</h1>
-                <div class="d-flex justify-content-center gap-3 mt-4 position-relative z-index-3">
+                <div class="d-flex justify-content-center gap-3 mt-4 mb-5 position-relative" style="z-index: 20;">
                     <a href="{{ route('transactions.create') }}" class="btn-green text-decoration-none">Pengajuan Layanan</a>
                     <a href="#cek-stok" class="btn-outline-green text-decoration-none">Cek Stok</a>
                 </div>
                 
                 <!-- Polaroids -->
-                <div class="row justify-content-center mt-5" style="perspective: 1000px;">
+                <div class="row justify-content-center mt-5 pt-4" style="perspective: 1000px;">
                     <div class="col-md-3 d-none d-md-block" data-aos="fade-up" data-aos-delay="200">
                         <div class="polaroid polaroid-1">
                             <div class="tape"></div>

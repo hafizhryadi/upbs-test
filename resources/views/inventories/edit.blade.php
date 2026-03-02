@@ -40,7 +40,7 @@
                             <div class="mb-3">
                                 <label for="batch_code" class="form-label">Kode Batch</label>
                                 <input type="text" class="form-control" id="batch_code" name="batch_code"
-                                    value="{{ old('batch_code', $inventory->batch_code) }}" required>
+                                    value="{{ old('batch_code', $inventory->batch_code) }}" readonly>
                             </div>
                             <div class="mb-3">
                                 <label for="expiry_date" class="form-label">Tanggal Kadaluarsa</label>
