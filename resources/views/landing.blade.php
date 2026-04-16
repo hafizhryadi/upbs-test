@@ -188,9 +188,9 @@
     <div class="container hero-content">
         <div class="row align-items-center">
             <div class="col-lg-12 text-center" data-aos="fade-up" data-aos-duration="1000">
-                <h1 class="hero-title mb-4">Unit Pengelola Benih Sumber<br>(UPBS) BRMP SumSel</h1>
+                <h1 class="hero-title mb-4">Unit Pengelola Benih Sumber<br>(UPBS) BBRMP SumSel</h1>
                 <div class="d-flex justify-content-center gap-3 mt-4 mb-5 position-relative" style="z-index: 20;">
-                    <a href="{{ route('transactions.create') }}" class="btn-green text-decoration-none">Pengajuan Layanan</a>
+                    <a href="{{ route('request.create') }}" class="btn-green text-decoration-none">Pengajuan Layanan</a>
                     <a href="#cek-stok" class="btn-outline-green text-decoration-none">Cek Stok</a>
                 </div>
                 
@@ -229,7 +229,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-10 text-center" data-aos="fade-up" data-aos-delay="100">
                 <p class="about-text mb-5">
-                    BRMP Sumatera Selatan melayani Pengelolaan Produk Instrumen Hasil Standardisasi yang dikelola oleh Unit Pengelola Benih Sumber (UPBS) BRMP Sumsel. Produk yang tersedia pada saat ini adalah benih padi. Layanan Benih/Bibit Sumber Spesifik Lokasi yang dikelola oleh Unit Pengelola Benih Sumber (UPBS) BRMP Sumsel dapat melalui dua cara yakni melalui bantuan dan melalui pembelian.
+                    BBRMP Sumatera Selatan melayani Pengelolaan Produk Instrumen Hasil Standardisasi yang dikelola oleh Unit Pengelola Benih Sumber (UPBS) BBRMP Sumsel. Produk yang tersedia pada saat ini adalah benih padi. Layanan Benih/Bibit Sumber Spesifik Lokasi yang dikelola oleh Unit Pengelola Benih Sumber (UPBS) BBRMP Sumsel dapat melalui dua cara yakni melalui bantuan dan melalui pembelian.
                 </p>
                 
                 <div class="row g-2 mt-4" data-aos="zoom-in" data-aos-delay="200">
@@ -243,27 +243,6 @@
                         <img src="{{ asset('images/hero_bg.png') }}" alt="Drying Rice 3" class="img-fluid rounded shadow-sm" style="height: 250px; object-fit: cover; width: 100%;">
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Kepala Balai Section -->
-<section class="py-5" style="background-color: #f8fafc;">
-    <div class="container py-5">
-        <div class="row align-items-center">
-            <div class="col-lg-7" data-aos="fade-right">
-                <h3 class="fw-bold fs-2 mb-4" style="color: #111827;">Kepala Balai Penerapan Modernisasi Pertanian Sumatera Selatan</h3>
-                <p class="about-text">
-                    Dr. Noor Roufiq Ahmadi, S.TP., MP lahir di Yogyakarta pada 30 Agustus 1974. Beliau menyelesaikan pendidikan S1 Teknologi Hasil Pertanian di Institut Pertanian Stiper tahun 1998, S2 Ilmu dan Teknologi Pangan di Universitas Gadjah Mada tahun 2004, dan S3 Teknologi Industri Pertanian di Institut Pertanian Bogor tahun 2012.
-                </p>
-                <p class="about-text">
-                    Beliau mulai mengabdi di Kementerian Pertanian sejak 1 Maret 1999 di Balai Pengkajian dan Teknologi Pertanian Kalimantan. Jabatan fungsional terakhirnya adalah Peneliti Muda pada tahun 2011. Beliau aktif menulis dan mempublikasikan berbagai karya ilmiah dalam jurnal, prosiding, buku, serta laporan penelitian.
-                </p>
-                <p class="fw-bold mt-4 text-end" style="color: #1f2937;">Dr. Noor Roufiq Ahmadi, S.TP., M.P.</p>
-            </div>
-            <div class="col-lg-5 text-center mt-4 mt-lg-0" data-aos="fade-left">
-                <img src="{{ asset('images/official_portrait.png') }}" alt="Dr. Noor Roufiq Ahmadi" class="img-fluid rounded-4 shadow-lg" style="max-height: 500px; object-fit: cover; border: 8px solid white;">
             </div>
         </div>
     </div>
@@ -299,7 +278,7 @@
         <div class="text-center mb-5" data-aos="fade-up">
             <h2 class="section-title">Informasi Stok Benih</h2>
             <p class="lead text-muted mx-auto" style="max-width: 800px;">
-                Total ketersediaan benih padi berdasarkan varietas saat ini di Gudang UPBS BRMP Sumsel.
+                Total ketersediaan benih padi berdasarkan varietas saat ini di Gudang UPBS BBRMP Sumsel.
             </p>
         </div>
 
@@ -410,9 +389,9 @@
     <div class="container py-4">
         <div class="row g-4">
             <div class="col-lg-5 mb-4 mb-lg-0" data-aos="fade-up">
-                <h5 class="text-green fw-bold mb-3 fs-4"><i class="bi bi-flower1"></i> UPBS BRMP SumSel</h5>
+                <h5 class="text-green fw-bold mb-3 fs-4"><i class="bi bi-flower1"></i> UPBS BBRMP SumSel</h5>
                 <p class="text-secondary small pe-lg-4" style="line-height: 1.8;">
-                    Unit Pengelola Benih Sumber (UPBS) di bawah naungan Balai Penerapan Modernisasi Pertanian (BRMP) Sumatera Selatan. Berkomitmen dalam menyediakan layanan benih padi varietas unggul demi meningkatkan produktivitas pertanian nasional.
+                    Unit Pengelola Benih Sumber (UPBS) di bawah naungan Balai Penerapan Modernisasi Pertanian (BBRMP) Sumatera Selatan. Berkomitmen dalam menyediakan layanan benih padi varietas unggul demi meningkatkan produktivitas pertanian nasional.
                 </p>
             </div>
             <div class="col-lg-3 col-md-6 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="100">
@@ -437,7 +416,7 @@
                     </li>
                     <li class="mb-3 d-flex">
                         <i class="bi bi-envelope-fill text-green me-3 fs-5"></i> 
-                        <span>brmp.sumsel@pertanian.go.id</span>
+                        <span>BBRMP.sumsel@pertanian.go.id</span>
                     </li>
                 </ul>
             </div>
@@ -445,7 +424,7 @@
         <hr class="border-secondary my-4" style="opacity: 0.2;">
         <div class="row align-items-center" data-aos="fade-up" data-aos-delay="300">
             <div class="col-md-6 text-center text-md-start text-secondary small">
-                 &copy; {{ date('Y') }} Sistem Informasi Manajemen Benih Padi<br>UPBS BRMP SumSel. All Rights Reserved.
+                 &copy; {{ date('Y') }} Sistem Informasi Manajemen Benih Padi<br>UPBS BBRMP SumSel. All Rights Reserved.
             </div>
             <div class="col-md-6 text-center text-md-end mt-3 mt-md-0 d-flex justify-content-center justify-content-md-end gap-3">
                 <a href="#" class="text-secondary transition hover-white"><i class="bi bi-facebook fs-4"></i></a>

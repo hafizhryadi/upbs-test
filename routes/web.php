@@ -6,6 +6,7 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\VarietyController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RequestController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,10 +19,31 @@ Route::get('/', function () {
     return view('landing', compact('stocks'));
 })->name('home');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/login', [\App\Http\Controllers\AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
+Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
-Route::resource('varieties',VarietyController::class);
-Route::resource('locations',LocationController::class);
-Route::resource('inventories',InventoryController::class);
-Route::resource('transactions',TransactionController::class);
-Route::resource('report', ReportController::class);
+// Public route for requesting
+Route::get('request/success', function () {
+    return view('requests.success');
+})->name('request.success');
+Route::resource('request', RequestController::class)->only(['create', 'store']);
+
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('varieties', VarietyController::class);
+    Route::resource('locations', LocationController::class);
+    Route::resource('inventories', InventoryController::class);
+    Route::resource('transactions', TransactionController::class);
+    Route::resource('report', ReportController::class);
+    Route::resource('request', RequestController::class)->except(['create', 'store', 'edit', 'update', 'destroy'])->names(['index' => 'request.index']);
+});
+
+// Fallback route for storage files (fixes 403 Forbidden with PHP built-in server on Windows)
+Route::get('storage/{path}', function ($path) {
+    $filePath = storage_path('app/public/' . $path);
+    if (!file_exists($filePath)) {
+        abort(404);
+    }
+    return response()->file($filePath);
+})->where('path', '.*');

@@ -81,3 +81,9 @@
     </div>
 </div>
 @endsection
+
+@extends('layouts.app')
+@section('title', 'Manajemen Varietas')
+@section('content')
+    <h1>Manajemen Varietas</h1>
+@endsection
