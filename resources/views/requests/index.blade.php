@@ -1,72 +1,92 @@
 @extends('layouts.app')
 
-@section('title', '- Daftar Permohonan Benih')
+@section('title', 'Daftar Permohonan Benih')
 
 @section('content')
-<div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Daftar Permohonan Benih</h1>
+<div class="mb-8">
+    <h2 class="text-[28px] font-bold text-slate-800 tracking-tight leading-tight">Daftar Permohonan Benih</h2>
+    <p class="text-slate-600 mt-1 text-base">Kelola dan pantau permohonan layanan benih dari masyarakat</p>
+</div>
+
+<div class="bg-white rounded-[16px] border border-slate-200 shadow-sm overflow-hidden">
+    <!-- Card Header -->
+    <div class="p-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex items-center">
+            <div class="text-[#10b981] mr-3 font-bold">
+                <i class="bi bi-clipboard-data text-[24px]"></i>
+            </div>
+            <h3 class="text-[20px] font-bold text-[#10b981]">Daftar Permohonan Terbaru</h3>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+            <div class="relative w-full sm:w-[320px]">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                    <i class="bi bi-search text-slate-400"></i>
+                </div>
+                <input type="text" class="bg-slate-100 border-none text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] w-full pl-10 px-4 py-2.5 transition-all outline-none font-medium placeholder-slate-400" placeholder="Cari nama pemohon atau instansi">
+            </div>
+        </div>
     </div>
 
-    <!-- DataTables Example -->
-    <div class="card shadow mb-4 border-0 rounded-lg">
-        <div class="card-header py-3 bg-white border-bottom-0">
-            <h6 class="m-0 font-weight-bold text-success">Daftar Permohonan Terbaru</h6>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle w-full bg-white text-sm" id="dataTable" width="100%" cellspacing="0">
-                    <thead class="bg-gray-50 text-gray-600">
-                        <tr>
-                            <th class="py-3 px-4 font-semibold text-left">Tanggal</th>
-                            <th class="py-3 px-4 font-semibold text-left">Nama / Instansi</th>
-                            <th class="py-3 px-4 font-semibold text-left">Kontak</th>
-                            <th class="py-3 px-4 font-semibold text-left">Permintaan (Benih / kg)</th>
-                            <th class="py-3 px-4 font-semibold text-left">Lokasi & Luas Lahan</th>
-                            <th class="py-3 px-4 font-semibold text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($requests as $request)
-                            <tr class="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
-                                <td class="py-3 px-4 text-gray-600">{{ $request->created_at->format('d M Y') }}</td>
-                                <td class="py-3 px-4">
-                                    <div class="font-medium text-gray-900">{{ $request->nama }}</div>
-                                    <div class="text-xs text-gray-500">{{ $request->kelompok_tani }}</div>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <div class="text-gray-900">{{ $request->phone }}</div>
-                                    <div class="text-xs text-gray-500">{{ $request->email ?? '-' }}</div>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-                                        {{ $request->benih }}
-                                    </span>
-                                    <br>
-                                    <span class="text-sm font-semibold text-gray-700 mt-1 inline-block">{{ $request->jumlah }} kg</span>
-                                </td>
-                                <td class="py-3 px-4 text-gray-600 text-sm">
-                                    <div class="truncate max-w-[150px]" title="{{ $request->lokasi_lahan }}">{{ $request->lokasi_lahan }}</div>
-                                    <div class="font-medium mt-1">{{ $request->luas_lahan }} Ha</div>
-                                </td>
-                                <td class="py-3 px-4 text-center">
-                                    <a href="{{ route('request.show', $request->id) }}" class="inline-flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm font-semibold text-[13px] transition-colors tooltip" title="Unduh Surat PDF">
-                                        <i class="bi bi-file-earmark-pdf text-[15px]"></i> Unduh PDF
-                                    </a>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center py-8 text-gray-500">Belum ada data permohonan.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-            <div class="mt-4">
-                {{ $requests->links() }}
-            </div>
-        </div>
+    <!-- Table -->
+    <div class="overflow-x-auto">
+        <table class="w-full text-left text-slate-700">
+            <thead class="text-[13px] text-slate-800 bg-slate-50 border-b border-slate-200">
+                <tr>
+                    <th scope="col" class="px-6 py-4 font-bold text-left">Tanggal</th>
+                    <th scope="col" class="px-6 py-4 font-bold text-left">Nama / Instansi</th>
+                    <th scope="col" class="px-6 py-4 font-bold text-left">Kontak</th>
+                    <th scope="col" class="px-6 py-4 font-bold text-left">Permintaan (Benih / kg)</th>
+                    <th scope="col" class="px-6 py-4 font-bold text-left">Lokasi & Luas Lahan</th>
+                    <th scope="col" class="px-6 py-4 font-bold text-center w-32">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($requests as $request)
+                    <tr class="bg-white border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4 text-slate-600 text-[13px] font-medium">
+                            {{ $request->created_at->format('d M Y') }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-slate-800 text-[13px]">{{ $request->nama }}</div>
+                            <div class="text-[12px] text-slate-500 mt-0.5">{{ $request->kelompok_tani }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="font-medium text-slate-800 text-[13px]">{{ $request->phone }}</div>
+                            <div class="text-[12px] text-slate-500 mt-0.5">{{ $request->email ?? '-' }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-block px-2.5 py-1 rounded-[6px] text-[11px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">
+                                {{ $request->benih }}
+                            </span>
+                            <div class="text-[13px] font-bold text-slate-700 mt-1.5">{{ number_format($request->jumlah) }} kg</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="truncate max-w-[150px] text-[13px] text-slate-600" title="{{ $request->lokasi_lahan }}">{{ $request->lokasi_lahan }}</div>
+                            <div class="font-bold text-slate-800 text-[13px] mt-1">{{ number_format($request->luas_lahan, 2) }} Ha</div>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <a href="{{ route('request.show', $request->id) }}" class="inline-flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#16a34a] hover:bg-[#15803d] text-white shadow-sm font-bold text-[12px] transition-colors tooltip w-full" title="Unduh Surat PDF">
+                                <i class="bi bi-file-earmark-pdf text-[14px]"></i> Unduh PDF
+                            </a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="px-6 py-10 text-center text-slate-500 text-[14px]">
+                            Belum ada data permohonan.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
+    
+    <!-- Pagination -->
+    @if($requests->hasPages())
+    <div class="p-6 border-t border-slate-200">
+        {{ $requests->links() }}
+    </div>
+    @endif
 </div>
 @endsection

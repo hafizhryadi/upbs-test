@@ -80,7 +80,7 @@
                             <div class="login-sidebar-overlay d-flex flex-column justify-content-center p-5 text-white">
                                 <div style="z-index: 2">
                                     <h2 class="fw-bold mb-4 fs-1">Sistem Manajemen Benih Padi</h2>
-                                    <p class="fs-5 opacity-75">Unit Pengelola Benih Sumber (UPBS) Balai Penerapan
+                                    <p class="fs-5 opacity-75">Unit Pengelola Benih Sumber (UPBS) Balai Besar Penerapan
                                         Modernisasi Pertanian Sumatera Selatan.</p>
                                 </div>
                             </div>

@@ -7,21 +7,26 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\VarietyController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequestController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    $stocks = \App\Models\Inventory::selectRaw('variety_id, expiry_date, SUM(quantity) as total_quantity')
+    return view('landing');
+})->name('home');
+
+Route::get('/stok', function () {
+    $stocks = Inventory::selectRaw('variety_id, expiry_date, SUM(quantity) as total_quantity')
         ->with('variety')
         ->groupBy('variety_id', 'expiry_date')
         ->orderBy('expiry_date', 'asc')
         ->get();
         
-    return view('landing', compact('stocks'));
-})->name('home');
+    return view('stok', compact('stocks'));
+})->name('stok.index');
 
-Route::get('/login', [\App\Http\Controllers\AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
-Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Public route for requesting
 Route::get('request/success', function () {
