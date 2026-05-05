@@ -107,7 +107,7 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 text-center font-bold text-[14px]">
-                            {{ number_format($trx->quantity, 3) }}
+                            {{ $trx->quantity }}
                         </td>
                         <td class="px-6 py-4 text-center text-slate-600 text-[12px]">
                             {{ \Carbon\Carbon::parse($trx->trx_date)->format('d M Y') }}
