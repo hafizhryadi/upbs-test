@@ -30,7 +30,7 @@ class InventoryController extends Controller
             ->orderBy('expiry_date', 'asc')
             ->get();
             
-        return view('public.stok', compact('stocks'));
+        return view('stok', compact('stocks'));
     }
 
     /**

@@ -14,15 +14,7 @@ Route::get('/', function () {
     return view('landing');
 })->name('home');
 
-Route::get('/stok', function () {
-    $stocks = Inventory::selectRaw('variety_id, expiry_date, SUM(quantity) as total_quantity')
-        ->with('variety')
-        ->groupBy('variety_id', 'expiry_date')
-        ->orderBy('expiry_date', 'asc')
-        ->get();
-        
-    return view('stok', compact('stocks'));
-})->name('stok.index');
+Route::get('/stok', [InventoryController::class, 'publicStok'])->name('stok.index');
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);

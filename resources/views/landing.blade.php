@@ -315,13 +315,11 @@
     <div id="welcomePopup" class="popup-overlay" style="display: none;">
         <div class="popup-content">
             <button class="popup-close" id="closePopupBtn">&times;</button>
-            <img src="{{ asset('images/hero_bg.png') }}" alt="Welcome Image" class="popup-img">
+            <img src="{{ asset('images/hero_bg.png') }}" alt="Survey Image" class="popup-img">
             <div class="popup-body">
-                <h3 class="popup-title">Selamat Datang!</h3>
-                <p class="popup-text">Dapatkan layanan benih padi unggul dengan kualitas terbaik untuk meningkatkan hasil
-                    panen Anda bersama UPBS BBRMP SumSel.</p>
-                <a href="{{ route('request.create') }}" class="btn-green d-inline-block mt-2 text-decoration-none">Ajukan
-                    Layanan Sekarang</a>
+                <h3 class="popup-title">Survei Kepuasan Layanan</h3>
+                <p class="popup-text">Bantu kami meningkatkan kualitas layanan dengan mengisi survei kepuasan pelanggan. Penilaian Anda sangat berarti bagi kami.</p>
+                <a href="#" class="btn-green d-inline-block mt-2 text-decoration-none" target="_blank">Isi Survei Sekarang</a>
             </div>
         </div>
     </div>
