@@ -23,7 +23,7 @@
         <div>
             <!-- Logo area -->
             <div class="p-6 border-b border-white/10">
-                <h1 class="text-2xl font-bold tracking-tight">UPBS BBRMP</h1>
+                <a class="text-2xl font-bold tracking-tight" href="{{ route('home') }}">UPBS BBRMP</a>
                 <p class="text-xs text-white/70 mt-1 font-medium">Panel Admin</p>
             </div>
 

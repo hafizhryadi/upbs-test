@@ -319,7 +319,7 @@
             <div class="popup-body">
                 <h3 class="popup-title">Survei Kepuasan Layanan</h3>
                 <p class="popup-text">Bantu kami meningkatkan kualitas layanan dengan mengisi survei kepuasan pelanggan. Penilaian Anda sangat berarti bagi kami.</p>
-                <a href="#" class="btn-green d-inline-block mt-2 text-decoration-none" target="_blank">Isi Survei Sekarang</a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLScPKtQAlCjo1NYUh1YVqcx7J_sZi6XELs3lFCHb7TCQH0r6ag/viewform" class="btn-green d-inline-block mt-2 text-decoration-none" target="_blank">Isi Survei Sekarang</a>
             </div>
         </div>
     </div>
