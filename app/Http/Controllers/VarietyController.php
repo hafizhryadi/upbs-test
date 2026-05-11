@@ -10,9 +10,18 @@ class VarietyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $varieties = Variety::all();
+        $query = Variety::query();
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('type', 'like', "%{$search}%");
+        }
+
+        $varieties = $query->latest()->get();
         return view('varieties.index', compact('varieties'));
     }
 
@@ -30,8 +39,18 @@ class VarietyController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                \Illuminate\Validation\Rule::unique('varieties')->where(function ($query) use ($request) {
+                    return $query->where('type', $request->type);
+                })
+            ],
+            'type' => 'required|in:FS,SS,ES',
             'description' => 'nullable|string',
+        ], [
+            'name.unique' => 'Kombinasi nama dan tipe varietas ini sudah terdaftar.'
         ]);
 
         Variety::create($validatedData);
@@ -62,8 +81,18 @@ class VarietyController extends Controller
     public function update(Request $request, string $id)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                \Illuminate\Validation\Rule::unique('varieties')->where(function ($query) use ($request) {
+                    return $query->where('type', $request->type);
+                })->ignore($id)
+            ],
+            'type' => 'required|in:FS,SS,ES',
             'description' => 'nullable|string',
+        ], [
+            'name.unique' => 'Kombinasi nama dan tipe varietas ini sudah terdaftar.'
         ]);
 
         $variety = Variety::findOrFail($id);

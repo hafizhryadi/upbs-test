@@ -106,10 +106,6 @@
                                 <label for="email" class="form-label">Email (Opsional)</label>
                                 <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="contoh@email.com">
                             </div>
-                            <div class="col-md-6">
-                                <label for="kelompok_tani" class="form-label">Kelompok Tani / Instansi</label>
-                                <input type="text" class="form-control" id="kelompok_tani" name="kelompok_tani" value="{{ old('kelompok_tani') }}" placeholder="Nama Kelompok Tani/Instansi" required>
-                            </div>
                             <div class="col-12">
                                 <label for="alamat" class="form-label">Alamat Lengkap</label>
                                 <textarea class="form-control" id="alamat" name="alamat" rows="3" placeholder="Masukkan alamat lengkap pengiriman" required>{{ old('alamat') }}</textarea>
@@ -121,7 +117,12 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="benih" class="form-label">Varietas Benih yang Diminta</label>
-                                <input type="text" class="form-control" id="benih" name="benih" value="{{ old('benih') }}" placeholder="Contoh: Inpari 32" required>
+                                <select class="form-select form-control" id="benih" name="benih" required>
+                                    <option value="" disabled selected>Pilih Varietas Benih</option>
+                                    @foreach($varieties as $variety)
+                                        <option value="{{ $variety->name }}" {{ old('benih') == $variety->name ? 'selected' : '' }}>{{ $variety->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-md-6">
                                 <label for="jumlah" class="form-label">Jumlah (kg)</label>
@@ -130,24 +131,17 @@
                                     <span class="input-group-text bg-light border-start-0 text-muted">kg</span>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <label for="rencana_tanam" class="form-label">Rencana Waktu Tanam</label>
-                                <input type="text" class="form-control" id="rencana_tanam" name="rencana_tanam" value="{{ old('rencana_tanam') }}" placeholder="Contoh: Awal Musim Hujan 2026 / November 2026" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="lokasi_lahan" class="form-label">Lokasi Lahan Tanam</label>
-                                <input type="text" class="form-control" id="lokasi_lahan" name="lokasi_lahan" value="{{ old('lokasi_lahan') }}" placeholder="Desa/Kecamatan/Kabupaten" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="luas_lahan" class="form-label">Luas Lahan (Hektar)</label>
-                                <div class="input-group">
-                                    <input type="number" step="0.01" class="form-control border-end-0" id="luas_lahan" name="luas_lahan" value="{{ old('luas_lahan') }}" min="0.1" placeholder="0.00" required>
-                                    <span class="input-group-text bg-light border-start-0 text-muted">ha</span>
-                                </div>
-                            </div>
                             <div class="col-12 mt-4">
+                                <label for="jenis" class="form-label">Jenis Permohonan</label>
+                                <select class="form-select form-control" id="jenis" name="jenis" required>
+                                    <option value="" disabled selected>Pilih Jenis Permohonan</option>
+                                    <option value="pembelian" {{ old('jenis') == 'pembelian' ? 'selected' : '' }}>Pembelian</option>
+                                    <option value="diseminasi" {{ old('jenis') == 'diseminasi' ? 'selected' : '' }}>Diseminasi</option>
+                                </select>
+                            </div>
+                            <div class="col-12 mt-4" id="surat_permohonan_container" style="display: none;">
                                 <label for="surat_permohonan" class="form-label">Unggah Surat Permohonan</label>
-                                <input class="form-control" type="file" id="surat_permohonan" name="surat_permohonan" accept=".pdf,.jpg,.jpeg,.png" required>
+                                <input class="form-control" type="file" id="surat_permohonan" name="surat_permohonan" accept=".pdf,.jpg,.jpeg,.png">
                                 <div class="form-text text-muted small mt-1"><i class="bi bi-info-circle me-1"></i>Format yang didukung: PDF, JPG, PNG. Maksimal ukuran 5MB.</div>
                             </div>
                         </div>
@@ -168,6 +162,25 @@
     AOS.init({
         once: true,
         duration: 800
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const jenisSelect = document.getElementById('jenis');
+        const suratContainer = document.getElementById('surat_permohonan_container');
+        const suratInput = document.getElementById('surat_permohonan');
+
+        function toggleSurat() {
+            if (jenisSelect.value === 'diseminasi') {
+                suratContainer.style.display = 'block';
+                suratInput.setAttribute('required', 'required');
+            } else {
+                suratContainer.style.display = 'none';
+                suratInput.removeAttribute('required');
+            }
+        }
+
+        toggleSurat();
+        jenisSelect.addEventListener('change', toggleSurat);
     });
 </script>
 @endsection

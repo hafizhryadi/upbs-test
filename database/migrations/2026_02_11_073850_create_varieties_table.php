@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('varieties', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('type', ['FS', 'SS', 'ES']);
             $table->text('description')->nullable();
             $table->timestamps();
+            
+            $table->unique(['name', 'type']);
         });
     }
 

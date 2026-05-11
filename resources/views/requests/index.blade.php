@@ -34,10 +34,11 @@
             <thead class="text-[13px] text-slate-800 bg-slate-50 border-b border-slate-200">
                 <tr>
                     <th scope="col" class="px-6 py-4 font-bold text-left">Tanggal</th>
-                    <th scope="col" class="px-6 py-4 font-bold text-left">Nama / Instansi</th>
+                    <th scope="col" class="px-6 py-4 font-bold text-left">Nama Lengkap</th>
                     <th scope="col" class="px-6 py-4 font-bold text-left">Kontak</th>
-                    <th scope="col" class="px-6 py-4 font-bold text-left">Permintaan (Benih / kg)</th>
-                    <th scope="col" class="px-6 py-4 font-bold text-left">Lokasi & Luas Lahan</th>
+                    <th scope="col" class="px-6 py-4 font-bold text-left">Alamat</th>
+                    <th scope="col" class="px-6 py-4 font-bold text-left">Jenis Permohonan</th>
+                    <th scope="col" class="px-6 py-4 font-bold text-left">Permintaan Benih</th>
                     <th scope="col" class="px-6 py-4 font-bold text-center w-32">Aksi</th>
                 </tr>
             </thead>
@@ -49,11 +50,18 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="font-bold text-slate-800 text-[13px]">{{ $request->nama }}</div>
-                            <div class="text-[12px] text-slate-500 mt-0.5">{{ $request->kelompok_tani }}</div>
                         </td>
                         <td class="px-6 py-4">
                             <div class="font-medium text-slate-800 text-[13px]">{{ $request->phone }}</div>
                             <div class="text-[12px] text-slate-500 mt-0.5">{{ $request->email ?? '-' }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-[13px] text-slate-600 max-w-[200px] line-clamp-2" title="{{ $request->alamat }}">{{ $request->alamat }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-block px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide {{ $request->jenis == 'pembelian' ? 'bg-blue-50 text-blue-600 border border-blue-200' : 'bg-purple-50 text-purple-600 border border-purple-200' }}">
+                                {{ $request->jenis }}
+                            </span>
                         </td>
                         <td class="px-6 py-4">
                             <span class="inline-block px-2.5 py-1 rounded-[6px] text-[11px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">
@@ -61,19 +69,21 @@
                             </span>
                             <div class="text-[13px] font-bold text-slate-700 mt-1.5">{{ number_format($request->jumlah) }} kg</div>
                         </td>
-                        <td class="px-6 py-4">
-                            <div class="truncate max-w-[150px] text-[13px] text-slate-600" title="{{ $request->lokasi_lahan }}">{{ $request->lokasi_lahan }}</div>
-                            <div class="font-bold text-slate-800 text-[13px] mt-1">{{ number_format($request->luas_lahan, 2) }} Ha</div>
-                        </td>
                         <td class="px-6 py-4 text-center">
-                            <a href="{{ route('request.show', $request->id) }}" class="inline-flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#16a34a] hover:bg-[#15803d] text-white shadow-sm font-bold text-[12px] transition-colors tooltip w-full" title="Unduh Surat PDF">
-                                <i class="bi bi-file-earmark-pdf text-[14px]"></i> Unduh PDF
-                            </a>
+                            @if($request->surat_permohonan)
+                                <a href="{{ route('request.show', $request->id) }}" class="inline-flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#16a34a] hover:bg-[#15803d] text-white shadow-sm font-bold text-[12px] transition-colors tooltip w-full" title="Unduh Surat PDF">
+                                    <i class="bi bi-file-earmark-pdf text-[14px]"></i> Unduh PDF
+                                </a>
+                            @else
+                                <span class="inline-flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-slate-100 text-slate-400 font-bold text-[12px] w-full cursor-not-allowed" title="Tidak ada file surat">
+                                    <i class="bi bi-dash-circle text-[14px]"></i> Tidak Ada
+                                </span>
+                            @endif
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-10 text-center text-slate-500 text-[14px]">
+                        <td colspan="7" class="px-6 py-10 text-center text-slate-500 text-[14px]">
                             Belum ada data permohonan.
                         </td>
                     </tr>

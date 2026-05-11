@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Request as RequestModel;
+use App\Models\Variety;
 use Illuminate\Http\Request;
 
 class RequestController extends Controller
@@ -11,7 +13,7 @@ class RequestController extends Controller
      */
     public function index()
     {
-        $requests = \App\Models\Request::latest()->paginate(10);
+        $requests = RequestModel::latest()->paginate(10);
         return view('requests.index', compact('requests'));
     }
 
@@ -20,7 +22,8 @@ class RequestController extends Controller
      */
     public function create()
     {
-        return view('requests.create');
+        $varieties = Variety::orderBy('name')->get();
+        return view('requests.create', compact('varieties'));
     }
 
     /**
@@ -32,14 +35,11 @@ class RequestController extends Controller
             'nama' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'email' => 'nullable|email|max:255',
-            'kelompok_tani' => 'required|string|max:255',
             'alamat' => 'required|string',
             'benih' => 'required|string|max:255',
             'jumlah' => 'required|integer|min:1',
-            'rencana_tanam' => 'required|string|max:255',
-            'lokasi_lahan' => 'required|string|max:255',
-            'luas_lahan' => 'required|integer|min:1',
-            'surat_permohonan' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'jenis' => 'required|in:pembelian,diseminasi',
+            'surat_permohonan' => 'required_if:jenis,diseminasi|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
         if ($request->hasFile('surat_permohonan')) {
@@ -47,9 +47,11 @@ class RequestController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads/permohonan'), $filename);
             $validated['surat_permohonan'] = 'uploads/permohonan/' . $filename;
+        } else {
+            $validated['surat_permohonan'] = null;
         }
 
-        \App\Models\Request::create($validated);
+        RequestModel::create($validated);
 
         return redirect()->route('request.success');
     }
@@ -59,7 +61,12 @@ class RequestController extends Controller
      */
     public function show(string $id)
     {
-        $request = \App\Models\Request::findOrFail($id);
+        $request = RequestModel::findOrFail($id);
+        
+        if (!$request->surat_permohonan) {
+            return redirect()->route('request.index')->with('error', 'Tidak ada surat permohonan untuk permohonan ini.');
+        }
+
         $filePath = public_path($request->surat_permohonan);
 
         if (file_exists($filePath)) {
@@ -82,7 +89,7 @@ class RequestController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(\Illuminate\Http\Request $request, string $id)
     {
         //
     }

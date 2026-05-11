@@ -20,5 +20,9 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@brmp.sumsel',
             'password' => bcrypt('password'),
         ]);
+
+        $this->call([
+            VarietySeeder::class,
+        ]);
     }
 }

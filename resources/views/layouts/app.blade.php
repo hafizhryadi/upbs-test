@@ -31,33 +31,28 @@
             <nav class="mt-6 px-4 space-y-1">
                 <a href="{{ route('dashboard') }}"
                     class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('dashboard') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
-                    <i
-                        class="bi bi-house mr-3 text-lg {{ request()->routeIs('dashboard') ? 'text-emerald-300' : '' }}"></i>
-                    Dashboard
+                    <i class="bi bi-house mr-3 text-lg {{ request()->routeIs('dashboard') ? 'text-emerald-300' : '' }}"></i>
+                    Beranda
                 </a>
                 <a href="{{ route('locations.index') }}"
                     class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('locations.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
-                    <i
-                        class="bi bi-geo-alt mr-3 text-lg {{ request()->routeIs('locations.*') ? 'text-emerald-300' : '' }}"></i>
-                    Locations
-                </a>
-                <a href="{{ route('inventories.index') }}"
-                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('inventories.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
-                    <i
-                        class="bi bi-box-seam mr-3 text-lg {{ request()->routeIs('inventories.*') ? 'text-emerald-300' : '' }}"></i>
-                    Inventory
+                    <i class="bi bi-geo-alt mr-3 text-lg {{ request()->routeIs('locations.*') ? 'text-emerald-300' : '' }}"></i>
+                    Lokasi Gudang
                 </a>
                 <a href="{{ route('varieties.index') }}"
                     class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('varieties.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
-                    <i
-                        class="bi bi-tags mr-3 text-lg {{ request()->routeIs('varieties.*') ? 'text-emerald-300' : '' }}"></i>
+                    <i class="bi bi-tags mr-3 text-lg {{ request()->routeIs('varieties.*') ? 'text-emerald-300' : '' }}"></i>
                     Varietas
+                </a>
+                <a href="{{ route('inventories.index') }}"
+                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('inventories.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
+                    <i class="bi bi-box-seam mr-3 text-lg {{ request()->routeIs('inventories.*') ? 'text-emerald-300' : '' }}"></i>
+                    Stok
                 </a>
                 <a href="{{ route('transactions.index') }}"
                     class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('transactions.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
-                    <i
-                        class="bi bi-credit-card mr-3 text-lg {{ request()->routeIs('transactions.*') ? 'text-emerald-300' : '' }}"></i>
-                    Transaksi
+                    <i class="bi bi-credit-card mr-3 text-lg {{ request()->routeIs('transactions.*') ? 'text-emerald-300' : '' }}"></i>
+                    Input Stok
                 </a>
                 <a href="{{ route('request.index') }}"
                     class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('request.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
@@ -66,8 +61,7 @@
                 </a>
                 <a href="{{ route('report.index') }}"
                     class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('report.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
-                    <i
-                        class="bi bi-file-earmark-text mr-3 text-lg {{ request()->routeIs('report.*') ? 'text-emerald-300' : '' }}"></i>
+                    <i class="bi bi-file-earmark-text mr-3 text-lg {{ request()->routeIs('report.*') ? 'text-emerald-300' : '' }}"></i>
                     Laporan
                 </a>
             </nav>

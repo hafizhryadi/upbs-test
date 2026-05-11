@@ -16,14 +16,11 @@ return new class extends Migration
             $table->string('nama');
             $table->string('phone');
             $table->string('email')->nullable();
-            $table->string('kelompok_tani');
             $table->string('alamat');
             $table->string('benih');
             $table->integer('jumlah');
-            $table->string('rencana_tanam');
-            $table->string('lokasi_lahan');
-            $table->integer('luas_lahan');
-            $table->string('surat_permohonan');
+            $table->enum('jenis', ['pembelian', 'diseminasi'])->default('pembelian');
+            $table->string('surat_permohonan')->nullable();
             $table->timestamps();
         });
     }
