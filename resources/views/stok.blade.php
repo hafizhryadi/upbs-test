@@ -42,7 +42,7 @@
         <div class="text-center mb-5" data-aos="fade-up">
             <h2 class="section-title">Informasi Stok Benih</h2>
             <p class="lead text-muted mx-auto" style="max-width: 800px;">
-                Total ketersediaan benih padi berdasarkan varietas saat ini di Gudang UPBS BBRMP Sumsel.
+                Total ketersediaan benih padi berdasarkan varietas saat ini di Gudang UPBS Beras BBRMP SumSel.
             </p>
         </div>
 

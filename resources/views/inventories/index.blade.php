@@ -44,7 +44,7 @@
                         <th scope="col" class="px-6 py-4 font-bold">Kelas Benih</th>
                         <th scope="col" class="px-6 py-4 font-bold">Lokasi Gudang</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Kode Batch</th>
-                        <th scope="col" class="px-6 py-4 font-bold text-center">Tgl Kadaluarsa</th>
+                        <th scope="col" class="px-6 py-4 font-bold text-center">Masa Edar</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Status</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Jumlah (kg)</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center w-24">Aksi</th>

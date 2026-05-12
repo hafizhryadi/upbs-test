@@ -23,7 +23,7 @@
         <div>
             <!-- Logo area -->
             <div class="p-6 border-b border-white/10">
-                <a class="text-2xl font-bold tracking-tight" href="{{ route('home') }}">UPBS BBRMP</a>
+                <a class="text-2xl font-bold tracking-tight" href="{{ route('home') }}">UPBS Beras BBRMP</a>
                 <p class="text-xs text-white/70 mt-1 font-medium">Panel Admin</p>
             </div>
 

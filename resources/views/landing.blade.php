@@ -517,7 +517,7 @@
         <div class="container py-4">
             <div class="row g-4">
                 <div class="col-lg-5 mb-4 mb-lg-0" data-aos="fade-up">
-                    <h5 class="text-green fw-bold mb-3 fs-4"><i class="bi bi-flower1"></i> UPBS BBRMP SumSel</h5>
+                    <h5 class="text-green fw-bold mb-3 fs-4"><i class="bi bi-flower1"></i> UPBS Beras BBRMP SumSel</h5>
                     <p class="text-secondary small pe-lg-4" style="line-height: 1.8;">
                         Unit Pengelola Benih Sumber (UPBS) di bawah naungan Balai Penerapan Modernisasi Pertanian (BBRMP)
                         Sumatera Selatan. Berkomitmen dalam menyediakan layanan benih padi varietas unggul demi meningkatkan
@@ -560,8 +560,7 @@
             <hr class="border-secondary my-4" style="opacity: 0.2;">
             <div class="row align-items-center" data-aos="fade-up" data-aos-delay="300">
                 <div class="col-md-6 text-center text-md-start text-secondary small">
-                    &copy; {{ date('Y') }} Sistem Informasi Manajemen Benih Padi<br>UPBS BBRMP SumSel. All Rights
-                    Reserved.
+                    &copy; {{ date('Y') }} Sistem Informasi Manajemen Benih Padi
                 </div>
                 <div
                     class="col-md-6 text-center text-md-end mt-3 mt-md-0 d-flex justify-content-center justify-content-md-end gap-3">
