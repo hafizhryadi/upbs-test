@@ -26,42 +26,33 @@
             </div>
 
             <div class="mb-5">
-                <label for="inventory_id" class="block text-[14px] font-semibold text-slate-700 mb-2">Pilih Stok (Batch)</label>
-                <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="inventory_id" name="inventory_id" required>
-                    <option value="" selected disabled>-- Pilih Varietas & Batch --</option>
-                    @foreach($inventories as $inv)
-                        <option value="{{ $inv->id }}">
-                            {{ $inv->variety->name ?? 'Unknown' }} - Batch: {{ $inv->batch_code }} (Sisa: {{ $inv->quantity }} kg)
+                <label for="variety_id" class="block text-[14px] font-semibold text-slate-700 mb-2">Pilih Stok Varietas</label>
+                <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="variety_id" name="variety_id" required>
+                    <option value="" selected disabled>-- Pilih Varietas --</option>
+                    @foreach($varieties as $variety)
+                        @php
+                            $total_stock = $variety->inventories->sum('quantity');
+                        @endphp
+                        <option value="{{ $variety->id }}">
+                            {{ $variety->name }} - {{ $variety->type ?? '' }} (Total Sisa Stok: {{ $total_stock }} kg)
                         </option>
                     @endforeach
                 </select>
-                <p class="text-[13px] text-slate-500 mt-2"><i class="bi bi-info-circle mr-1"></i>Pilih batch stok yang akan diproses.</p>
+                <p class="text-[13px] text-slate-500 mt-2"><i class="bi bi-info-circle mr-1"></i>Sistem otomatis akan mengurangi stok dari batch yang paling awal mendekati masa kedaluwarsa (FEFO).</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                 <div>
-                    <label for="trx_type" class="block text-[14px] font-semibold text-slate-700 mb-2">Jenis Transaksi</label>
-                    <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="trx_type" name="trx_type" required>
-                        <option value="masuk">Masuk (In)</option>
-                        <option value="keluar">Keluar (Out)</option>
+                    <label for="category" class="block text-[14px] font-semibold text-slate-700 mb-2">Kategori Pengeluaran</label>
+                    <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="category" name="category" required>
+                        <option value="penjualan">Penjualan</option>
+                        <option value="diseminasi">Diseminasi</option>
                     </select>
                 </div>
                 <div>
-                    <label for="category" class="block text-[14px] font-semibold text-slate-700 mb-2">Kategori</label>
-                    <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="category" name="category" required>
-                        <option value="Produksi">Produksi</option>
-                        <option value="Penjualan">Penjualan</option>
-                        <option value="Subsidi">Subsidi</option>
-                        <option value="Transfer">Transfer</option>
-                        <option value="Koreksi">Koreksi</option>
-                        <option value="Retur">Retur</option>
-                    </select>
+                    <label for="quantity" class="block text-[14px] font-semibold text-slate-700 mb-2">Jumlah Keluar (kg)</label>
+                    <input type="number" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="quantity" name="quantity" min="1" placeholder="0" required>
                 </div>
-            </div>
-
-            <div class="mb-5">
-                <label for="quantity" class="block text-[14px] font-semibold text-slate-700 mb-2">Jumlah (kg)</label>
-                <input type="number" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="quantity" name="quantity" min="1" placeholder="0" required>
             </div>
 
             <div class="mb-5">

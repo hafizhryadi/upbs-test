@@ -8,8 +8,8 @@ class Transaction extends Model
 {
     protected $guarded = [];
 
-    public function inventory()
+    public function variety()
     {
-        return $this->belongsTo(Inventory::class);
+        return $this->belongsTo(Variety::class);
     }
 }

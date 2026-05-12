@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('inventory_id');
+            $table->unsignedBigInteger('variety_id');
             $table->date('trx_date')->now();
-            $table->enum('trx_type', ['masuk', 'keluar']);
-            $table->enum('category', ['Produksi', 'Penjualan', 'Subsidi', 'Transfer', 'Koreksi', 'Retur']);
+            $table->enum('trx_type', ['keluar'])->default('keluar');
+            $table->enum('category', ['penjualan', 'diseminasi']);
             $table->integer('quantity');
             $table->text('note');
             $table->timestamps();

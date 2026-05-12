@@ -14,7 +14,7 @@
         <div class="w-12 h-12 bg-emerald-50 rounded-lg flex items-center justify-center mb-2">
             <i class="bi bi-box-seam text-2xl text-[#0B6638]"></i>
         </div>
-        <h3 class="text-[32px] font-bold text-[#0B6638] leading-none mb-1">{{ number_format($total_stock) }}</h3>
+        <h3 class="text-[32px] font-bold text-[#0B6638] leading-none mb-1">{{ number_format($total_stock) }} Kg</h3>
         <p class="text-[13px] font-bold text-slate-800">Total benih</p>
     </div>
 
@@ -56,9 +56,9 @@
             <div class="bg-slate-100/80 hover:bg-slate-100 transition-colors rounded-[14px] p-5 flex flex-col sm:flex-row sm:justify-between sm:items-center">
                 <div>
                     <h4 class="font-bold text-slate-800 text-[15px]">TRX-{{ str_pad($trx->id, 5, '0', STR_PAD_LEFT) }} • <span class="text-[13px] text-slate-500 capitalize">{{ $trx->category }}</span></h4>
-                    <p class="text-[13px] text-slate-700 mt-1">{{ $trx->note ?: ($trx->trx_type == 'masuk' ? 'Tambahan Stok' : 'Pengeluaran Stok') }}</p>
-                    <p class="text-[13px] {{ $trx->trx_type == 'masuk' ? 'text-emerald-600' : 'text-rose-600' }} font-semibold mt-0.5">
-                        {{ $trx->trx_type == 'masuk' ? '+' : '-' }}{{ number_format($trx->quantity) }} kg ({{ optional($trx->inventory->variety)->name ?? 'Unknown' }})
+                    <p class="text-[13px] text-slate-700 mt-1">{{ $trx->note ?: 'Pengeluaran Stok' }}</p>
+                    <p class="text-[13px] text-rose-600 font-semibold mt-0.5">
+                        -{{ number_format($trx->quantity) }} kg ({{ optional($trx->variety)->name ?? 'Unknown' }})
                     </p>
                 </div>
                 <div class="mt-3 sm:mt-0 sm:text-right">
@@ -95,7 +95,7 @@
         <div class="space-y-3">
             @forelse($recent_transactions as $trx)
             <div class="bg-slate-100/80 rounded-[12px] p-4">
-                <h4 class="font-bold text-slate-800 text-[14px]">{{ optional($trx->inventory->variety)->name ?? '-' }}</h4>
+                <h4 class="font-bold text-slate-800 text-[14px]">{{ optional($trx->variety)->name ?? '-' }}</h4>
                 <p class="text-[13px] text-slate-700 mt-1">{{ number_format($trx->quantity) }} kg • {{ $trx->category }}</p>
                 <p class="text-[12px] text-slate-500 mt-0.5">{{ \Carbon\Carbon::parse($trx->trx_date)->format('d M H:i') }}</p>
             </div>

@@ -38,7 +38,7 @@
                 <tr>
                     <th scope="col" class="px-8 py-5 font-bold w-24">No</th>
                     <th scope="col" class="px-8 py-5 font-bold w-56">Nama Varietas</th>
-                    <th scope="col" class="px-8 py-5 font-bold w-24">Tipe Varietas</th>
+                    <th scope="col" class="px-8 py-5 font-bold w-24">Kelas Benih</th>
                     <th scope="col" class="px-8 py-5 font-bold">Deskripsi</th>
                     <th scope="col" class="px-8 py-5 font-bold text-center w-32">Aksi</th>
                 </tr>

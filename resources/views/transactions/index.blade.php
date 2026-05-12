@@ -4,13 +4,13 @@
 
 @section('content')
 @php
-    $total_masuk = $transactions->where('trx_type', 'masuk')->sum('quantity');
-    $total_keluar = $transactions->where('trx_type', 'keluar')->sum('quantity');
+    $total_penjualan = $transactions->where('category', 'penjualan')->sum('quantity');
+    $total_diseminasi = $transactions->where('category', 'diseminasi')->sum('quantity');
 @endphp
 
 <div class="mb-8">
     <h2 class="text-[28px] font-bold text-slate-800 tracking-tight leading-tight">Manajemen Transaksi</h2>
-    <p class="text-slate-600 mt-1 text-base">Kelola riwayat transaksi masuk dan keluar benih</p>
+    <p class="text-slate-600 mt-1 text-base">Kelola riwayat pengeluaran stok benih (Penjualan / Diseminasi)</p>
 </div>
 
 <!-- Top Cards -->
@@ -27,21 +27,21 @@
 
     <div class="bg-white rounded-[16px] p-6 border border-slate-200 shadow-sm flex items-center justify-between">
         <div>
-            <p class="text-[14px] text-slate-600 font-medium mb-1">Total masuk</p>
-            <h3 class="text-[28px] font-bold text-[#16a34a]">{{ number_format($total_masuk, 2) }} Kg</h3>
+            <p class="text-[14px] text-slate-600 font-medium mb-1">Total Penjualan</p>
+            <h3 class="text-[28px] font-bold text-[#16a34a]">{{ number_format($total_penjualan, 2) }} Kg</h3>
         </div>
         <div class="text-[#16a34a] text-[32px]">
-            <i class="bi bi-arrow-down-circle"></i>
+            <i class="bi bi-cart-check"></i>
         </div>
     </div>
 
     <div class="bg-white rounded-[16px] p-6 border border-slate-200 shadow-sm flex items-center justify-between">
         <div>
-            <p class="text-[14px] text-slate-600 font-medium mb-1">Total keluar</p>
-            <h3 class="text-[28px] font-bold text-[#ef4444]">{{ number_format($total_keluar, 2) }} Kg</h3>
+            <p class="text-[14px] text-slate-600 font-medium mb-1">Total Diseminasi</p>
+            <h3 class="text-[28px] font-bold text-[#ef4444]">{{ number_format($total_diseminasi, 2) }} Kg</h3>
         </div>
         <div class="text-[#ef4444] text-[32px]">
-            <i class="bi bi-arrow-up-circle"></i>
+            <i class="bi bi-share"></i>
         </div>
     </div>
 </div>
@@ -76,10 +76,9 @@
         <table class="w-full text-left text-slate-700">
             <thead class="text-[13px] text-slate-800 bg-white border-b border-slate-200">
                 <tr>
-                    <th scope="col" class="px-6 py-4 font-bold w-16">ID</th>
-                    <th scope="col" class="px-6 py-4 font-bold">Inventory</th>
-                    <th scope="col" class="px-6 py-4 font-bold text-center">Tipe</th>
-                    <th scope="col" class="px-6 py-4 font-bold text-center">Jumlah (kg)</th>
+                    <th scope="col" class="px-6 py-4 font-bold w-16">No</th>
+                    <th scope="col" class="px-6 py-4 font-bold">Varietas</th>
+                    <th scope="col" class="px-6 py-4 font-bold text-center">Jumlah Keluar (kg)</th>
                     <th scope="col" class="px-6 py-4 font-bold text-center">Tanggal</th>
                     <th scope="col" class="px-6 py-4 font-bold text-center">Kategori</th>
                     <th scope="col" class="px-6 py-4 font-bold">Keterangan</th>
@@ -90,21 +89,10 @@
                 @forelse($transactions as $index => $trx)
                     <tr class="bg-white border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
                         <td class="px-6 py-4 font-bold text-slate-800 text-[13px]">
-                            {{ str_pad($loop->iteration, 3, '0', STR_PAD_LEFT) }}
+                            {{ $loop->iteration }}
                         </td>
-                        <td class="px-6 py-4 text-[13px] font-medium text-slate-700">
-                            {{ $trx->inventory->variety->name ?? '-' }}
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            @if($trx->trx_type == 'masuk')
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-green-50 text-green-600 border border-green-200">
-                                    <i class="bi bi-arrow-down-circle-fill mr-1 text-[10px]"></i> Masuk
-                                </span>
-                            @else
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-red-50 text-red-500 border border-red-200">
-                                    <i class="bi bi-arrow-down-circle-fill mr-1 text-[10px] transform rotate-180"></i> Keluar
-                                </span>
-                            @endif
+                        <td class="px-6 py-4">
+                            <div class="font-medium text-[13px] text-slate-800">{{ $trx->variety->name ?? '-' }} {{ $trx->variety->type }}</div>
                         </td>
                         <td class="px-6 py-4 text-center font-bold text-[14px]">
                             {{ $trx->quantity }}
@@ -116,11 +104,9 @@
                             @php
                                 $kat_lower = strtolower($trx->category);
                                 $badge_class = 'bg-blue-100 text-blue-700 border-blue-200';
-                                if($kat_lower == 'adjust' || str_contains($kat_lower, 'tambah')) {
+                                if($kat_lower == 'penjualan') {
                                     $badge_class = 'bg-[#22c55e] text-white border-green-500 shadow-sm shadow-green-200';
-                                } elseif(str_contains($kat_lower, 'rusak') || str_contains($kat_lower, 'hilang')) {
-                                    $badge_class = 'bg-red-500 text-white border-red-600 shadow-sm shadow-red-200';
-                                } elseif($kat_lower == 'jual' || str_contains($kat_lower, 'dinas')) {
+                                } elseif($kat_lower == 'diseminasi') {
                                     $badge_class = 'bg-[#60a5fa] text-white border-blue-400 shadow-sm shadow-blue-200';
                                 }
                             @endphp
@@ -143,7 +129,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="px-6 py-10 text-center text-slate-500 text-[14px]">
+                        <td colspan="7" class="px-6 py-10 text-center text-slate-500 text-[14px]">
                             Belum ada riwayat transaksi.
                         </td>
                     </tr>

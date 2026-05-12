@@ -47,7 +47,7 @@
                 <a href="{{ route('inventories.index') }}"
                     class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('inventories.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
                     <i class="bi bi-box-seam mr-3 text-lg {{ request()->routeIs('inventories.*') ? 'text-emerald-300' : '' }}"></i>
-                    Stok
+                    Ketersediaan
                 </a>
                 <a href="{{ route('transactions.index') }}"
                     class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('transactions.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
