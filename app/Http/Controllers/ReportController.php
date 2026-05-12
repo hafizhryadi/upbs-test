@@ -37,7 +37,7 @@ class ReportController extends Controller
                 
             $months[] = [
                 'month_number' => $m,
-                'month_name' => $date->translatedFormat('F'),
+                'month_name' => $date->locale('id')->translatedFormat('F'),
                 'total_in' => $totalIn,
                 'total_out' => $totalOut,
                 'trx_count' => $trxCount,
@@ -75,7 +75,7 @@ class ReportController extends Controller
             abort(404);
         }
         
-        $monthName = Carbon::create($year, $month, 1)->translatedFormat('F');
+        $monthName = Carbon::create($year, $month, 1)->locale('id')->translatedFormat('F');
         $inventories = \App\Models\Inventory::with(['variety', 'location'])
             ->whereYear('created_at', $year)
             ->whereMonth('created_at', $month)
