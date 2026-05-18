@@ -21,18 +21,18 @@ class ReportController extends Controller
             $date = Carbon::create($year, $m, 1);
             
             // Get stats for this month
-            $totalIn = \App\Models\Inventory::whereYear('created_at', $year)
-                ->whereMonth('created_at', $m)
+            $totalIn = \App\Models\Transaction::where('trx_type', 'masuk')
+                ->whereYear('trx_date', $year)
+                ->whereMonth('trx_date', $m)
                 ->sum('quantity');
                 
-            $totalOut = \App\Models\Transaction::whereYear('trx_date', $year)
+            $totalOut = \App\Models\Transaction::where('trx_type', 'keluar')
+                ->whereYear('trx_date', $year)
                 ->whereMonth('trx_date', $m)
                 ->sum('quantity');
                 
             $trxCount = \App\Models\Transaction::whereYear('trx_date', $year)
                 ->whereMonth('trx_date', $m)
-                ->count() + \App\Models\Inventory::whereYear('created_at', $year)
-                ->whereMonth('created_at', $m)
                 ->count();
                 
             $months[] = [
@@ -76,13 +76,15 @@ class ReportController extends Controller
         }
         
         $monthName = Carbon::create($year, $month, 1)->locale('id')->translatedFormat('F');
-        $inventories = \App\Models\Inventory::with(['variety', 'location'])
-            ->whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->orderBy('created_at', 'asc')
+        $transactionsMasuk = \App\Models\Transaction::with(['variety'])
+            ->where('trx_type', 'masuk')
+            ->whereYear('trx_date', $year)
+            ->whereMonth('trx_date', $month)
+            ->orderBy('trx_date', 'asc')
             ->get();
 
-        $transactions = \App\Models\Transaction::with(['variety'])
+        $transactionsKeluar = \App\Models\Transaction::with(['variety'])
+            ->where('trx_type', 'keluar')
             ->whereYear('trx_date', $year)
             ->whereMonth('trx_date', $month)
             ->orderBy('trx_date', 'asc')
@@ -100,12 +102,12 @@ class ReportController extends Controller
             $keluarData[] = 0;
         }
 
-        foreach ($inventories as $inv) {
-            $dayIndex = intval(Carbon::parse($inv->created_at)->format('d')) - 1;
-            $masukData[$dayIndex] += floatval($inv->quantity);
+        foreach ($transactionsMasuk as $trx) {
+            $dayIndex = intval(Carbon::parse($trx->trx_date)->format('d')) - 1;
+            $masukData[$dayIndex] += floatval($trx->quantity);
         }
 
-        foreach ($transactions as $trx) {
+        foreach ($transactionsKeluar as $trx) {
             $dayIndex = intval(Carbon::parse($trx->trx_date)->format('d')) - 1;
             $keluarData[$dayIndex] += floatval($trx->quantity);
         }
@@ -149,7 +151,7 @@ class ReportController extends Controller
         $chartContents = @file_get_contents($chartUrlRaw, false, $ctx);
         $chartUrl = $chartContents ? 'data:image/png;base64,' . base64_encode($chartContents) : null;
 
-        $pdf =  Pdf::loadView('reports.pdf', compact('inventories', 'transactions', 'monthName', 'year', 'chartUrl'));
+        $pdf =  Pdf::loadView('reports.pdf', compact('transactionsMasuk', 'transactionsKeluar', 'monthName', 'year', 'chartUrl'));
         $pdf->setPaper('A4', 'portrait');
         
         $pdfFileName = "Laporan_Bulanan_{$monthName}_{$year}.pdf";

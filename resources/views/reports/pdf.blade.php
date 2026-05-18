@@ -40,8 +40,8 @@
     @endif
 
     @php
-        $transaksiMasuk = $inventories;
-        $transaksiKeluar = $transactions;
+        $transaksiMasuk = $transactionsMasuk;
+        $transaksiKeluar = $transactionsKeluar;
         $totalMasuk = $transaksiMasuk->sum('quantity');
         $totalKeluar = $transaksiKeluar->sum('quantity');
     @endphp
@@ -54,26 +54,22 @@
                     <th class="text-center">#</th>
                     <th>Tanggal Masuk</th>
                     <th>Varietas</th>
-                    <th>Lokasi</th>
-                    <th>Kelas Benih</th>
-                    <th>Kode Batch</th>
+                    <th>Keterangan</th>
                     <th class="text-right">Jumlah (kg)</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($transaksiMasuk as $inv)
+                @forelse($transaksiMasuk as $trx)
                 <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
-                    <td>{{ \Carbon\Carbon::parse($inv->created_at)->format('d M Y') }}</td>
-                    <td>{{ $inv->variety->name ?? '-' }}</td>
-                    <td>{{ $inv->location->name ?? '-' }}</td>
-                    <td class="text-center">{{ $inv->type ?? '-' }}</td>
-                    <td>{{ $inv->batch_code ?? '-' }}</td>
-                    <td class="text-right">{{ number_format($inv->quantity) }}</td>
+                    <td>{{ \Carbon\Carbon::parse($trx->trx_date)->format('d M Y') }}</td>
+                    <td>{{ $trx->variety->name ?? '-' }}</td>
+                    <td>{{ $trx->note ?? '-' }}</td>
+                    <td class="text-right">{{ number_format($trx->quantity) }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="text-center">Belum ada transaksi masuk tercatat di bulan ini.</td>
+                    <td colspan="5" class="text-center">Belum ada transaksi masuk tercatat di bulan ini.</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -97,7 +93,7 @@
                 @forelse($transaksiKeluar as $trx)
                 <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
-                    <td>{{ $trx->variety->name ?? '-' }} {{ $trx->variety->type }}</td>
+                    <td>{{ $trx->variety->name ?? '-' }}</td>
                     <td class="text-right">{{ number_format($trx->quantity) }}</td>
                     <td>{{ \Carbon\Carbon::parse($trx->trx_date)->format('d M Y') }}</td>
                     <td>{{ ucfirst($trx->category) }}</td>
