@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\Inventory;
 use App\Models\Variety;
+use App\Models\Location;
 
 class TransactionController extends Controller
 {
@@ -26,11 +26,11 @@ class TransactionController extends Controller
     {
         $varieties = Variety::with(['inventories' => function($q) {
             $q->where('quantity', '>', 0)->where('status', '!=', 'expired');
-        }])->get()->filter(function($variety) {
-            return $variety->inventories->sum('quantity') > 0;
-        });
+        }])->get();
+        
+        $locations = Location::all();
 
-        return view('transactions.create', compact('varieties'));
+        return view('transactions.create', compact('varieties', 'locations'));
     }
 
     /**
@@ -39,9 +39,9 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'trx_type' => 'required|in:masuk,keluar',
             'variety_id' => 'required|exists:varieties,id',
             'trx_date' => 'required|date',
-            'category' => 'required|in:penjualan,diseminasi',
             'quantity' => 'required|integer|min:1',
             'note' => 'nullable|string',
         ]);
@@ -49,44 +49,78 @@ class TransactionController extends Controller
         $varietyId = $validated['variety_id'];
         $requestedQuantity = $validated['quantity'];
 
-        // Get available inventories for this variety, ordered by expiry date (FEFO)
-        $inventories = Inventory::where('variety_id', $varietyId)
-            ->where('quantity', '>', 0)
-            ->where('status', '!=', 'expired')
-            ->orderBy('expiry_date', 'asc')
-            ->get();
+        if ($validated['trx_type'] == 'masuk') {
+            $masukValidated = $request->validate([
+                'location_id' => 'required|exists:locations,id',
+                'expiry_date' => 'required|date',
+                'status' => 'required|in:ready,packing,hold,expired',
+            ]);
 
-        $totalAvailable = $inventories->sum('quantity');
+            // Create Inventory (type will use default from schema or be omitted since it's merged)
+            $inventory = Inventory::create([
+                'variety_id' => $varietyId,
+                'location_id' => $masukValidated['location_id'],
+                'batch_code' => 'BATCH-' . strtoupper(\Illuminate\Support\Str::random(8)),
+                'expiry_date' => $masukValidated['expiry_date'],
+                'status' => $masukValidated['status'],
+                'quantity' => $requestedQuantity,
+            ]);
 
-        if ($totalAvailable < $requestedQuantity) {
-            return back()->withErrors(['quantity' => 'Stok tidak mencukupi. Total sisa stok varietas ini: ' . $totalAvailable . ' kg'])->withInput();
-        }
+            // Create Transaction
+            Transaction::create([
+                'variety_id' => $varietyId,
+                'trx_date' => $validated['trx_date'],
+                'trx_type' => 'masuk',
+                'category' => null, // category is only for keluar based on user requirements
+                'quantity' => $requestedQuantity,
+                'note' => $validated['note'],
+            ]);
 
-        $remainingQuantity = $requestedQuantity;
+            return redirect()->route('transactions.index')->with('success', 'Transaksi masuk berhasil dicatat dan stok ditambahkan.');
+        } else {
+            $keluarValidated = $request->validate([
+                'category' => 'required|in:penjualan,diseminasi',
+            ]);
 
-        foreach ($inventories as $inventory) {
-            if ($remainingQuantity <= 0) {
-                break;
+            // Get available inventories for this variety, ordered by expiry date (FEFO)
+            $inventories = Inventory::where('variety_id', $varietyId)
+                ->where('quantity', '>', 0)
+                ->where('status', '!=', 'expired')
+                ->orderBy('expiry_date', 'asc')
+                ->get();
+
+            $totalAvailable = $inventories->sum('quantity');
+
+            if ($totalAvailable < $requestedQuantity) {
+                return back()->withErrors(['quantity' => 'Stok tidak mencukupi. Total sisa stok kelas benih ini: ' . $totalAvailable . ' kg'])->withInput();
             }
 
-            $takeQuantity = min($inventory->quantity, $remainingQuantity);
-            
-            // Deduct stock
-            $inventory->decrement('quantity', $takeQuantity);
-            $remainingQuantity -= $takeQuantity;
+            $remainingQuantity = $requestedQuantity;
+
+            foreach ($inventories as $inventory) {
+                if ($remainingQuantity <= 0) {
+                    break;
+                }
+
+                $takeQuantity = min($inventory->quantity, $remainingQuantity);
+                
+                // Deduct stock
+                $inventory->decrement('quantity', $takeQuantity);
+                $remainingQuantity -= $takeQuantity;
+            }
+
+            // Create exactly 1 transaction record
+            Transaction::create([
+                'variety_id' => $varietyId,
+                'trx_date' => $validated['trx_date'],
+                'trx_type' => 'keluar',
+                'category' => $keluarValidated['category'],
+                'quantity' => $requestedQuantity,
+                'note' => $validated['note'],
+            ]);
+
+            return redirect()->route('transactions.index')->with('success', 'Transaksi keluar berhasil disimpan dan stok otomatis dikurangi (Sistem FEFO).');
         }
-
-        // Create exactly 1 transaction record
-        Transaction::create([
-            'variety_id' => $varietyId,
-            'trx_date' => $validated['trx_date'],
-            'trx_type' => 'keluar',
-            'category' => $validated['category'],
-            'quantity' => $requestedQuantity,
-            'note' => $validated['note'],
-        ]);
-
-        return redirect()->route('transactions.index')->with('success', 'Transaksi berhasil disimpan dan stok otomatis dikurangi (Sistem FEFO).');
     }
 
     /**
@@ -103,11 +137,10 @@ class TransactionController extends Controller
     public function edit(string $id)
     {
         $transaction = Transaction::with('variety')->findOrFail($id);
-        // We generally don't want to allow changing the inventory item itself on edit to avoid complex logic
-        // But for this simple app, we can just show the current one or allow note edits.
-        // For full flexibility, we'd need to reverse old stock and apply new stock.
+        $varieties = Variety::all();
+        $locations = Location::all();
         
-        return view('transactions.edit', compact('transaction'));
+        return view('transactions.edit', compact('transaction', 'varieties', 'locations'));
     }
 
     /**
@@ -117,52 +150,68 @@ class TransactionController extends Controller
     {
         $validated = $request->validate([
             'trx_date' => 'required|date',
-            'category' => 'required|in:penjualan,diseminasi',
             'quantity' => 'required|integer|min:1',
             'note' => 'nullable|string',
         ]);
 
         $transaction = Transaction::findOrFail($id);
         $varietyId = $transaction->variety_id;
-
-        // 1. Revert old transaction: Add back to the newest inventory batch for this variety
-        $newestInventory = Inventory::where('variety_id', $varietyId)->orderBy('created_at', 'desc')->first();
-        if ($newestInventory) {
-            $newestInventory->increment('quantity', $transaction->quantity);
-        }
-
-        // 2. Apply new transaction using FEFO
         $requestedQuantity = $validated['quantity'];
-        
-        $inventories = Inventory::where('variety_id', $varietyId)
-            ->where('quantity', '>', 0)
-            ->where('status', '!=', 'expired')
-            ->orderBy('expiry_date', 'asc')
-            ->get();
 
-        $totalAvailable = $inventories->sum('quantity');
+        if ($transaction->trx_type == 'keluar') {
+            $keluarValidated = $request->validate([
+                'category' => 'required|in:penjualan,diseminasi',
+            ]);
+            $validated['category'] = $keluarValidated['category'];
 
-        if ($totalAvailable < $requestedQuantity) {
-            // Re-apply old transaction to restore state
+            // 1. Revert old transaction: Add back to the newest inventory batch for this variety
+            $newestInventory = Inventory::where('variety_id', $varietyId)
+                ->orderBy('created_at', 'desc')->first();
             if ($newestInventory) {
-                $newestInventory->decrement('quantity', $transaction->quantity);
+                $newestInventory->increment('quantity', $transaction->quantity);
             }
-            return back()->withErrors(['quantity' => 'Stok tidak mencukupi untuk perubahan ini. Total sisa stok varietas ini: ' . $totalAvailable . ' kg'])->withInput();
+
+            // 2. Apply new transaction using FEFO
+            $inventories = Inventory::where('variety_id', $varietyId)
+                ->where('quantity', '>', 0)
+                ->where('status', '!=', 'expired')
+                ->orderBy('expiry_date', 'asc')
+                ->get();
+
+            $totalAvailable = $inventories->sum('quantity');
+
+            if ($totalAvailable < $requestedQuantity) {
+                // Re-apply old transaction to restore state
+                if ($newestInventory) {
+                    $newestInventory->decrement('quantity', $transaction->quantity);
+                }
+                return back()->withErrors(['quantity' => 'Stok tidak mencukupi untuk perubahan ini. Total sisa stok: ' . $totalAvailable . ' kg'])->withInput();
+            }
+            
+            $remainingQuantity = $requestedQuantity;
+
+            foreach ($inventories as $inventory) {
+                if ($remainingQuantity <= 0) break;
+
+                $takeQuantity = min($inventory->quantity, $remainingQuantity);
+                $inventory->decrement('quantity', $takeQuantity);
+                $remainingQuantity -= $takeQuantity;
+            }
+            
+            $transaction->update($validated);
+            return redirect()->route('transactions.index')->with('success', 'Transaksi keluar diperbarui dan stok disesuaikan.');
+        } else {
+            // For 'masuk' transaction, we just update the transaction log.
+            $diff = $requestedQuantity - $transaction->quantity;
+            $newestInventory = Inventory::where('variety_id', $varietyId)
+                ->orderBy('created_at', 'desc')->first();
+            if ($newestInventory) {
+                $newestInventory->increment('quantity', $diff);
+            }
+            
+            $transaction->update($validated);
+            return redirect()->route('transactions.index')->with('success', 'Transaksi masuk diperbarui.');
         }
-        
-        $remainingQuantity = $requestedQuantity;
-
-        foreach ($inventories as $inventory) {
-            if ($remainingQuantity <= 0) break;
-
-            $takeQuantity = min($inventory->quantity, $remainingQuantity);
-            $inventory->decrement('quantity', $takeQuantity);
-            $remainingQuantity -= $takeQuantity;
-        }
-
-        $transaction->update($validated);
-        
-        return redirect()->route('transactions.index')->with('success', 'Transaksi diperbarui dan stok disesuaikan.');
     }
 
     /**
@@ -173,10 +222,16 @@ class TransactionController extends Controller
         $transaction = Transaction::findOrFail($id);
         $varietyId = $transaction->variety_id;
 
-        // Revert stock (add back to newest inventory)
-        $newestInventory = Inventory::where('variety_id', $varietyId)->orderBy('created_at', 'desc')->first();
+        // Revert stock
+        $newestInventory = Inventory::where('variety_id', $varietyId)
+            ->orderBy('created_at', 'desc')->first();
+            
         if ($newestInventory) {
-            $newestInventory->increment('quantity', $transaction->quantity);
+            if ($transaction->trx_type == 'keluar') {
+                $newestInventory->increment('quantity', $transaction->quantity);
+            } else {
+                $newestInventory->decrement('quantity', min($newestInventory->quantity, $transaction->quantity));
+            }
         }
 
         $transaction->delete();

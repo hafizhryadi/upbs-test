@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('variety_id');
             $table->date('trx_date')->now();
-            $table->enum('trx_type', ['keluar'])->default('keluar');
-            $table->enum('category', ['penjualan', 'diseminasi']);
+            $table->enum('trx_type', ['masuk', 'keluar'])->default('keluar');
+            $table->enum('category', ['penjualan', 'diseminasi'])->nullable();
             $table->integer('quantity');
-            $table->text('note');
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

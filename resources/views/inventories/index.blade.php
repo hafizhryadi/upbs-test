@@ -5,7 +5,7 @@
 @section('content')
     <div class="mb-8">
         <h2 class="text-[28px] font-bold text-slate-800 tracking-tight leading-tight">Manajemen Inventori</h2>
-        <p class="text-slate-600 mt-1 text-base">Kelola stok benih dan kode batch</p>
+        <p class="text-slate-600 mt-1 text-base">Pantau ketersediaan stok benih (Read-Only)</p>
     </div>
 
     <div class="bg-white rounded-[16px] border border-slate-200 shadow-sm overflow-hidden">
@@ -27,10 +27,6 @@
                         class="bg-slate-100 border-none text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] w-full pl-10 px-4 py-2.5 transition-all outline-none font-medium placeholder-slate-400"
                         placeholder="Cari varietas atau kode batch">
                 </div>
-                <a href="{{ route('inventories.create') }}"
-                    class="w-full sm:w-auto bg-[#16a34a] hover:bg-[#15803d] text-white font-bold rounded-lg text-[14px] px-5 py-2.5 text-center transition-colors shadow-sm flex items-center justify-center whitespace-nowrap">
-                    <i class="bi bi-plus text-lg mr-1"></i> Tambah Stok Awal
-                </a>
             </div>
         </div>
 
@@ -41,13 +37,11 @@
                     <tr>
                         <th scope="col" class="px-6 py-4 font-bold w-12">No</th>
                         <th scope="col" class="px-6 py-4 font-bold">Varietas</th>
-                        <th scope="col" class="px-6 py-4 font-bold">Kelas Benih</th>
                         <th scope="col" class="px-6 py-4 font-bold">Lokasi Gudang</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Kode Batch</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Masa Edar</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Status</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Jumlah (kg)</th>
-                        <th scope="col" class="px-6 py-4 font-bold text-center w-24">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,9 +52,6 @@
                             </td>
                             <td class="px-6 py-4 font-medium text-[13px] text-slate-800">
                                 {{ $inventory->variety->name ?? '-' }}
-                            </td>
-                            <td class="px-6 py-4 text-slate-600 text-[13px]">
-                                {{ $inventory->variety->type ?? '-' }}
                             </td>
                             <td class="px-6 py-4 text-slate-600 text-[13px]">
                                 {{ $inventory->location->name ?? '-' }}
@@ -111,26 +102,6 @@
                             </td>
                             <td class="px-6 py-4 text-center font-bold text-[14px]">
                                 {{ number_format($inventory->quantity) }}
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <div class="flex items-center justify-center gap-3">
-                                    <a href="{{ route('inventories.edit', $inventory->id) }}"
-                                        class="font-medium text-slate-600 hover:text-slate-900 transition-colors tooltip"
-                                        title="Edit">
-                                        <i class="bi bi-pencil-square text-[16px]"></i>
-                                    </a>
-                                    <form action="{{ route('inventories.destroy', $inventory->id) }}" method="POST"
-                                        class="inline-block m-0"
-                                        onsubmit="return confirm('Yakin ingin menghapus stok ini? Transaksi terkait mungkin akan error.');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="font-medium text-red-500 hover:text-red-700 transition-colors tooltip flex items-center"
-                                            title="Hapus">
-                                            <i class="bi bi-trash text-[16px]"></i>
-                                        </button>
-                                    </form>
-                                </div>
                             </td>
                         </tr>
                     @empty

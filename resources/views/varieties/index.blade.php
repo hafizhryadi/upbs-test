@@ -38,7 +38,6 @@
                 <tr>
                     <th scope="col" class="px-8 py-5 font-bold w-24">No</th>
                     <th scope="col" class="px-8 py-5 font-bold w-56">Nama Varietas</th>
-                    <th scope="col" class="px-8 py-5 font-bold w-24">Kelas Benih</th>
                     <th scope="col" class="px-8 py-5 font-bold">Deskripsi</th>
                     <th scope="col" class="px-8 py-5 font-bold text-center w-32">Aksi</th>
                 </tr>
@@ -51,25 +50,6 @@
                         </td>
                         <td class="px-8 py-5 font-medium text-[14px]">
                             {{ $variety->name }}
-                        </td>
-                        <td class="px-8 py-5 text-[14px]">
-                            @if($variety->type == 'FS')
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">
-                                    FS
-                                </span>
-                            @elseif($variety->type == 'SS')
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-600 border border-blue-200">
-                                    SS
-                                </span>
-                            @elseif($variety->type == 'ES')
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-600 border border-amber-200">
-                                    ES
-                                </span>
-                            @else
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-50 text-slate-600 border border-slate-200">
-                                    {{ $variety->type }}
-                                </span>
-                            @endif
                         </td>
                         <td class="px-8 py-5 text-slate-600 text-[14px] leading-relaxed">
                             {{ $variety->description }}

@@ -14,10 +14,10 @@ class VarietySeeder extends Seeder
     public function run(): void
     {
         $varieties = [
-            ['name' => 'Inpari 32', 'type' => 'SS', 'description' => 'Varietas unggul baru padi sawah'],
-            ['name' => 'Inpari 42', 'type' => 'SS', 'description' => 'Varietas unggul padi sawah irigasi'],
-            ['name' => 'Inpari 50', 'type' => 'SS', 'description' => 'Varietas unggul padi sawah'],
-            ['name' => 'Padjajaran agritan', 'type' => 'SS', 'description' => 'Varietas unggul toleran kekeringan'],
+            ['name' => 'Inpari 32 SS', 'description' => 'Varietas unggul baru padi sawah'],
+            ['name' => 'Inpari 42 SS', 'description' => 'Varietas unggul padi sawah irigasi'],
+            ['name' => 'Inpari 50 SS', 'description' => 'Varietas unggul padi sawah'],
+            ['name' => 'Padjajaran agritan SS', 'description' => 'Varietas unggul toleran kekeringan'],
         ];
 
         foreach ($varieties as $variety) {

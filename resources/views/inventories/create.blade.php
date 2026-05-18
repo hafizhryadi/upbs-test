@@ -20,25 +20,14 @@
         <form action="{{ route('inventories.store') }}" method="POST">
             @csrf
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                <div>
-                    <label for="variety_id" class="block text-[14px] font-semibold text-slate-700 mb-2">Varietas</label>
-                    <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="variety_id" name="variety_id" required>
-                        <option value="" selected disabled>-- Pilih Varietas --</option>
-                        @foreach ($varieties as $variety)
-                            <option value="{{ $variety->id }}" {{ old('variety_id') == $variety->id ? 'selected' : '' }}>{{ $variety->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div>
-                    <label for="type" class="block text-[14px] font-semibold text-slate-700 mb-2">Kelas Benih (Tipe)</label>
-                    <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="type" name="type" required>
-                        <option value="" selected disabled>-- Pilih Kelas Benih --</option>
-                        <option value="FS" {{ old('type') == 'FS' ? 'selected' : '' }}>FS</option>
-                        <option value="SS" {{ old('type') == 'SS' ? 'selected' : '' }}>SS</option>
-                        <option value="ES" {{ old('type') == 'ES' ? 'selected' : '' }}>ES</option>
-                    </select>
-                </div>
+            <div class="mb-5">
+                <label for="variety_id" class="block text-[14px] font-semibold text-slate-700 mb-2">Varietas</label>
+                <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="variety_id" name="variety_id" required>
+                    <option value="" selected disabled>-- Pilih Varietas --</option>
+                    @foreach ($varieties as $variety)
+                        <option value="{{ $variety->id }}" {{ old('variety_id') == $variety->id ? 'selected' : '' }}>{{ $variety->name }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">

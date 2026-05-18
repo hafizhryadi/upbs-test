@@ -23,7 +23,7 @@
         .hero {
             position: relative;
             min-height: 90vh;
-            background: url('{{ asset('images/hero_bg.png') }}') center/cover no-repeat;
+            background: url('{{ asset('images/hero_bg.jpeg') }}') center/cover no-repeat;
             display: flex;
             align-items: center;
             overflow: hidden;
@@ -315,11 +315,13 @@
     <div id="welcomePopup" class="popup-overlay" style="display: none;">
         <div class="popup-content">
             <button class="popup-close" id="closePopupBtn">&times;</button>
-            <img src="{{ asset('images/hero_bg.png') }}" alt="Survey Image" class="popup-img">
+            <img src="{{ asset('images/hero_bg.jpeg') }}" alt="Survey Image" class="popup-img">
             <div class="popup-body">
                 <h3 class="popup-title">Survei Kepuasan Layanan</h3>
-                <p class="popup-text">Bantu kami meningkatkan kualitas layanan dengan mengisi survei kepuasan pelanggan. Penilaian Anda sangat berarti bagi kami.</p>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLScPKtQAlCjo1NYUh1YVqcx7J_sZi6XELs3lFCHb7TCQH0r6ag/viewform" class="btn-green d-inline-block mt-2 text-decoration-none" target="_blank">Isi Survei Sekarang</a>
+                <p class="popup-text">Bantu kami meningkatkan kualitas layanan dengan mengisi survei kepuasan pelanggan.
+                    Penilaian Anda sangat berarti bagi kami.</p>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLScPKtQAlCjo1NYUh1YVqcx7J_sZi6XELs3lFCHb7TCQH0r6ag/viewform"
+                    class="btn-green d-inline-block mt-2 text-decoration-none" target="_blank">Isi Survei Sekarang</a>
             </div>
         </div>
     </div>
@@ -341,19 +343,19 @@
                         <div class="col-md-3 d-none d-md-block" data-aos="fade-up" data-aos-delay="200">
                             <div class="polaroid polaroid-1">
                                 <div class="tape"></div>
-                                <img src="{{ asset('images/seed_storage.png') }}" alt="Seed Storage">
+                                <img src="{{ asset('images/office.jpeg') }}" alt="Seed Storage">
                             </div>
                         </div>
                         <div class="col-md-3 d-none d-md-block" data-aos="fade-down" data-aos-delay="300">
                             <div class="polaroid polaroid-2">
                                 <div class="tape"></div>
-                                <img src="{{ asset('images/seed_storage.png') }}" alt="Seed Preparation">
+                                <img src="{{ asset('images/seed_storage2.jpeg') }}" alt="Seed Preparation">
                             </div>
                         </div>
                         <div class="col-md-3 d-none d-md-block" data-aos="fade-up" data-aos-delay="400">
                             <div class="polaroid polaroid-3">
                                 <div class="tape"></div>
-                                <img src="{{ asset('images/hero_bg.png') }}" alt="Rice Field">
+                                <img src="{{ asset('images/seed_storage.jpeg') }}" alt="Rice Field">
                             </div>
                         </div>
                     </div>
@@ -379,15 +381,15 @@
 
                     <div class="row g-2 mt-4" data-aos="zoom-in" data-aos-delay="200">
                         <div class="col-4">
-                            <img src="{{ asset('images/hero_bg.png') }}" alt="Drying Rice 1"
+                            <img src="{{ asset('images/beras_3.jpeg') }}" alt="Drying Rice 1"
                                 class="img-fluid rounded shadow-sm" style="height: 250px; object-fit: cover; width: 100%;">
                         </div>
                         <div class="col-4">
-                            <img src="{{ asset('images/hero_bg.png') }}" alt="Drying Rice 2"
+                            <img src="{{ asset('images/beras_4.jpeg') }}" alt="Drying Rice 2"
                                 class="img-fluid rounded shadow-sm" style="height: 250px; object-fit: cover; width: 100%;">
                         </div>
                         <div class="col-4">
-                            <img src="{{ asset('images/hero_bg.png') }}" alt="Drying Rice 3"
+                            <img src="{{ asset('images/seed_storage2.jpeg') }}" alt="Drying Rice 3"
                                 class="img-fluid rounded shadow-sm" style="height: 250px; object-fit: cover; width: 100%;">
                         </div>
                     </div>

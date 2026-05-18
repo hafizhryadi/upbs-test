@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('variety_id');
             $table->unsignedBigInteger('location_id');
-            $table->enum('type', ['FS', 'SS', 'ES'])->default('SS');
             $table->string('batch_code');
             $table->date('expiry_date');
             $table->enum('status', ['ready', 'packing', 'hold', 'expired']);

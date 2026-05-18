@@ -51,7 +51,6 @@ class InventoryController extends Controller
         $validated = $request->validate([
             'variety_id' => 'required|exists:varieties,id',
             'location_id' => 'required|exists:locations,id',
-            'type' => 'required|in:FS,SS,ES',
             'expiry_date' => 'required|date',
             'status' => 'required|in:ready,packing,hold,expired',
             'quantity' => 'required|integer|min:0',
@@ -93,7 +92,6 @@ class InventoryController extends Controller
         $validated = $request->validate([
             'variety_id' => 'required|exists:varieties,id',
             'location_id' => 'required|exists:locations,id',
-            'type' => 'required|in:FS,SS,ES',
             'expiry_date' => 'required|date',
             'status' => 'required|in:ready,packing,hold,expired',
             'quantity' => 'required|integer|min:0',

@@ -17,23 +17,42 @@
     </div>
     
     <div class="p-6">
-        <form action="{{ route('varieties.store') }}" method="POST">
+        <form action="{{ route('varieties.store') }}" method="POST" id="varietyForm">
             @csrf
             
+            @php
+                $oldName = old('name');
+                $defaultInputName = $oldName;
+                $defaultInputType = '';
+                
+                if ($oldName) {
+                    $parts = explode(' ', $oldName);
+                    $lastWord = end($parts);
+                    if (in_array($lastWord, ['FS', 'SS', 'ES'])) {
+                        $defaultInputType = $lastWord;
+                        array_pop($parts);
+                        $defaultInputName = implode(' ', $parts);
+                    }
+                }
+            @endphp
+
             <div class="mb-5">
-                <label for="name" class="block text-[14px] font-semibold text-slate-700 mb-2">Nama Varietas</label>
-                <input type="text" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="name" name="name" value="{{ old('name') }}" placeholder="Masukkan nama varietas" required>
+                <label for="input_name" class="block text-[14px] font-semibold text-slate-700 mb-2">Nama Varietas</label>
+                <input type="text" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="input_name" value="{{ $defaultInputName }}" placeholder="Masukkan nama varietas" required>
             </div>
+            
             <div class="mb-5">
-                <label for="type" class="block text-[14px] font-semibold text-slate-700 mb-2">Tipe Varietas</label>
-                <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="type" name="type" required>
-                    <option value="" disabled selected>Pilih Tipe Varietas</option>
-                    <option value="FS" {{ old('type') == 'FS' ? 'selected' : '' }}>FS</option>
-                    <option value="SS" {{ old('type') == 'SS' ? 'selected' : '' }}>SS</option>
-                    <option value="ES" {{ old('type') == 'ES' ? 'selected' : '' }}>ES</option>
+                <label for="input_type" class="block text-[14px] font-semibold text-slate-700 mb-2">Tipe Benih</label>
+                <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="input_type" required>
+                    <option value="" disabled {{ $defaultInputType == '' ? 'selected' : '' }}>Pilih Tipe Benih</option>
+                    <option value="FS" {{ $defaultInputType == 'FS' ? 'selected' : '' }}>FS</option>
+                    <option value="SS" {{ $defaultInputType == 'SS' ? 'selected' : '' }}>SS</option>
+                    <option value="ES" {{ $defaultInputType == 'ES' ? 'selected' : '' }}>ES</option>
                 </select>
             </div>
             
+            <input type="hidden" name="name" id="name" value="{{ old('name') }}">
+
             <div class="mb-5">
                 <label for="description" class="block text-[14px] font-semibold text-slate-700 mb-2">Deskripsi</label>
                 <textarea class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="description" name="description" rows="4" placeholder="Masukkan deskripsi varietas (opsional)">{{ old('description') }}</textarea>
@@ -46,4 +65,14 @@
         </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('varietyForm').addEventListener('submit', function() {
+        const inputName = document.getElementById('input_name').value.trim();
+        const inputType = document.getElementById('input_type').value;
+        if(inputName && inputType) {
+            document.getElementById('name').value = inputName + ' ' + inputType;
+        }
+    });
+</script>
 @endsection
