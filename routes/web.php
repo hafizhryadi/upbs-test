@@ -20,7 +20,6 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Public route for requesting
 Route::get('request/success', function () {
     return view('requests.success');
 })->name('request.success');
@@ -36,7 +35,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('request', RequestController::class)->except(['create', 'store', 'edit', 'update', 'destroy'])->names(['index' => 'request.index']);
 });
 
-// Fallback route for storage files (fixes 403 Forbidden with PHP built-in server on Windows)
 Route::get('storage/{path}', function ($path) {
     $filePath = storage_path('app/public/' . $path);
     if (!file_exists($filePath)) {
