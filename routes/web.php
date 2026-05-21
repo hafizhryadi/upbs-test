@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('inventories', InventoryController::class);
     Route::resource('transactions', TransactionController::class);
     Route::resource('report', ReportController::class);
+    Route::patch('request/{request}/status', [RequestController::class, 'updateStatus'])->name('request.status');
     Route::resource('request', RequestController::class)->except(['create', 'store', 'edit', 'update', 'destroy'])->names(['index' => 'request.index']);
 });
 

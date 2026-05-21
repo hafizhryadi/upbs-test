@@ -78,6 +78,19 @@ class RequestController extends Controller
         return redirect()->route('request.index')->with('error', 'File tidak ditemukan.');
     }
 
+    public function updateStatus(Request $request, string $id)
+    {
+        $validated = $request->validate([
+            'status' => 'required|in:pending,disetujui,ditolak',
+        ]);
+
+        $requestModel = RequestModel::findOrFail($id);
+        $requestModel->status = $validated['status'];
+        $requestModel->save();
+
+        return redirect()->back()->with('success', 'Status permohonan berhasil diperbarui.');
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -89,7 +102,7 @@ class RequestController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(\Illuminate\Http\Request $request, string $id)
+    public function update(Request $request, string $id)
     {
         //
     }
