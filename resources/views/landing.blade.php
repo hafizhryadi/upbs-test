@@ -437,39 +437,15 @@
             </div>
 
             <div class="row g-4 text-center">
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                @foreach ($varieties as $variety)
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="{{ $loop->iteration * 100 }}">
                     <div class="variety-card h-100">
-                        <div class="step-circle">1</div>
-                        <h4 class="fw-bold mb-3 fs-5">Inpari 32 HDB</h4>
-                        <p class="text-muted small">Varietas padi unggul sawah irigasi yang memiliki produktivitas tinggi
-                            dan tahan terhadap penyakit Hawar Daun Bakteri (HDB) serta beberapa biotipe wereng batang
-                            coklat.</p>
+                        <div class="step-circle">{{ $loop->iteration }}</div>
+                        <h4 class="fw-bold mb-3 fs-5">{{ $variety->name }}</h4>
+                        <p class="text-muted small">{{ $variety->description }}</p>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="variety-card h-100">
-                        <div class="step-circle">2</div>
-                        <h4 class="fw-bold mb-3 fs-5">Inpari 42 Agritan GSR</h4>
-                        <p class="text-muted small">Varietas padi berdaya hasil tinggi dengan konsep Green Super Rice
-                            (GSR), hemat input, ramah lingkungan, dan adaptif pada berbagai kondisi lahan.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="variety-card h-100">
-                        <div class="step-circle">3</div>
-                        <h4 class="fw-bold mb-3 fs-5">Inpari 50 Marem</h4>
-                        <p class="text-muted small">Varietas padi unggul dengan potensi hasil tinggi, tahan terhadap wereng
-                            batang coklat, HDB, dan blas, serta memiliki karakter nasi pera.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
-                    <div class="variety-card h-100">
-                        <div class="step-circle">4</div>
-                        <h4 class="fw-bold mb-3 fs-5">Padjajaran Agritan</h4>
-                        <p class="text-muted small">Varietas padi unggul yang adaptif di lahan sawah irigasi dengan hasil
-                            produksi yang baik dan kualitas beras yang cukup disukai.</p>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>

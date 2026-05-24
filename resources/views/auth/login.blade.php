@@ -87,7 +87,8 @@
                         </div>
                         <div class="col-lg-6 p-5 d-flex flex-column justify-content-center bg-white">
                             <div class="text-center mb-4">
-                                <i class="bi bi-flower1 text-green" style="font-size: 3rem;"></i>
+                                {{-- logo upbs --}}
+                                <img src="{{ asset('images/kementan.png') }}" alt="UPBS" width="100">
                                 <h3 class="fw-bold text-dark mt-2">Masuk Admin</h3>
                                 <p class="text-muted">Silakan masukkan kredensial Anda untuk melanjutkan</p>
                             </div>

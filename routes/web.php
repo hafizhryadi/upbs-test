@@ -9,9 +9,11 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Variety;
 
 Route::get('/', function () {
-    return view('landing');
+    $varieties = Variety::all();
+    return view('landing', compact('varieties'));
 })->name('home');
 
 Route::get('/stok', [InventoryController::class, 'publicStok'])->name('stok.index');
