@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('variety_id');
+            $table->unsignedBigInteger('inventory_id')->nullable();
             $table->date('trx_date')->now();
             $table->enum('trx_type', ['masuk', 'keluar'])->default('keluar');
             $table->enum('category', ['penjualan', 'diseminasi'])->nullable();

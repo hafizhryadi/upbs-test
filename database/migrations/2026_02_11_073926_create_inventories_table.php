@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('location_id');
             $table->string('batch_code');
             $table->date('expiry_date');
-            $table->enum('status', ['ready', 'packing', 'hold', 'expired']);
             $table->integer('quantity');
             $table->timestamps();
         });

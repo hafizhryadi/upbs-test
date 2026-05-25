@@ -12,4 +12,9 @@ class Transaction extends Model
     {
         return $this->belongsTo(Variety::class);
     }
+
+    public function inventory()
+    {
+        return $this->belongsTo(Inventory::class);
+    }
 }

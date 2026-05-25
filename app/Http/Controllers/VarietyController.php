@@ -49,13 +49,7 @@ class VarietyController extends Controller
         return redirect()->route('varieties.index')->with('success', 'Variety created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.

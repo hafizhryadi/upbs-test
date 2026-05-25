@@ -15,7 +15,7 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Transaction::with('variety')->latest();
+        $query = Transaction::with(['variety', 'inventory'])->latest();
 
         if ($request->filled('start_date')) {
             $query->whereDate('trx_date', '>=', $request->start_date);
@@ -65,27 +65,28 @@ class TransactionController extends Controller
             $masukValidated = $request->validate([
                 'variety_id' => 'required|exists:varieties,id',
                 'location_id' => 'required|exists:locations,id',
-                'batch_code' => 'nullable|string|max:255',
+                'batch_code' => 'string|max:255',
                 'expiry_date' => 'required|date',
-                'status' => 'required|in:ready,packing,hold,expired',
             ]);
 
             $varietyId = $masukValidated['variety_id'];
+
+            $batchCode = $masukValidated['batch_code'] ?? 'BATCH-' . strtoupper(\Illuminate\Support\Str::random(8));
 
             // Create Inventory
             $inventory = Inventory::create([
                 'variety_id' => $varietyId,
                 'location_id' => $masukValidated['location_id'],
-                'batch_code' => $masukValidated['batch_code'],
+                'batch_code' => $batchCode,
                 'expiry_date' => $masukValidated['expiry_date'],
-                'status' => $masukValidated['status'],
+                'status' => 'ready',
                 'quantity' => $requestedQuantity,
             ]);
 
             // Create Transaction
             Transaction::create([
                 'variety_id' => $varietyId,
-                'batch_code' => $masukValidated['batch_code'],
+                'inventory_id' => $inventory->id,
                 'trx_date' => $validated['trx_date'],
                 'trx_type' => 'masuk',
                 'category' => null,
@@ -112,7 +113,7 @@ class TransactionController extends Controller
             // Create transaction record
             Transaction::create([
                 'variety_id' => $inventory->variety_id,
-                'batch_code' => $inventory->batch_code,
+                'inventory_id' => $inventory->id,
                 'trx_date' => $validated['trx_date'],
                 'trx_type' => 'keluar',
                 'category' => $keluarValidated['category'],
@@ -124,13 +125,7 @@ class TransactionController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        
-    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -166,13 +161,7 @@ class TransactionController extends Controller
             $validated['category'] = $keluarValidated['category'];
 
             // 1. Revert old transaction
-            $inventoryToRevert = Inventory::where('variety_id', $varietyId);
-            if ($transaction->batch_code) {
-                $inventoryToRevert = $inventoryToRevert->where('batch_code', $transaction->batch_code);
-            } else {
-                $inventoryToRevert = $inventoryToRevert->whereNull('batch_code');
-            }
-            $inventoryToRevert = $inventoryToRevert->first();
+            $inventoryToRevert = Inventory::find($transaction->inventory_id);
 
             if ($inventoryToRevert) {
                 $inventoryToRevert->increment('quantity', $transaction->quantity);
@@ -194,13 +183,7 @@ class TransactionController extends Controller
         } else {
             // For 'masuk' transaction, we just update the transaction log and adjust the related inventory.
             $diff = $requestedQuantity - $transaction->quantity;
-            $inventoryToAdjust = Inventory::where('variety_id', $varietyId);
-            if ($transaction->batch_code) {
-                $inventoryToAdjust = $inventoryToAdjust->where('batch_code', $transaction->batch_code);
-            } else {
-                $inventoryToAdjust = $inventoryToAdjust->whereNull('batch_code');
-            }
-            $inventoryToAdjust = $inventoryToAdjust->first();
+            $inventoryToAdjust = Inventory::find($transaction->inventory_id);
 
             if ($inventoryToAdjust) {
                 $inventoryToAdjust->increment('quantity', $diff);
@@ -220,13 +203,7 @@ class TransactionController extends Controller
         $varietyId = $transaction->variety_id;
 
         // Revert stock
-        $inventoryToRevert = Inventory::where('variety_id', $varietyId);
-        if ($transaction->batch_code) {
-            $inventoryToRevert = $inventoryToRevert->where('batch_code', $transaction->batch_code);
-        } else {
-            $inventoryToRevert = $inventoryToRevert->whereNull('batch_code');
-        }
-        $inventoryToRevert = $inventoryToRevert->first();
+        $inventoryToRevert = Inventory::find($transaction->inventory_id);
             
         if ($inventoryToRevert) {
             if ($transaction->trx_type == 'keluar') {

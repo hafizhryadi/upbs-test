@@ -66,7 +66,9 @@
                             <td class="px-6 py-4 text-center text-[12px]">
                                 <div class="text-slate-800 font-medium mb-1">
                                     {{ \Carbon\Carbon::parse($inventory->expiry_date)->format('d/m/Y') }}</div>
-                                @php
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                 @php
                                     $expiry_badge_class = 'bg-slate-100 text-slate-600';
                                     if ($inventory->expiry_status_badge == 'danger') {
                                         $expiry_badge_class = 'bg-red-50 text-red-600 border border-red-200';
@@ -79,28 +81,6 @@
                                 <span
                                     class="inline-block px-2 py-0.5 rounded text-[11px] font-bold {{ $expiry_badge_class }}">
                                     {{ $inventory->expiry_status_label }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                @php
-                                    $status_badge_class = 'bg-slate-100 text-slate-600 border-slate-200';
-                                    if ($inventory->status == 'ready') {
-                                        $status_badge_class =
-                                            'bg-[#22c55e] text-white border-green-500 shadow-sm shadow-green-200';
-                                    } elseif ($inventory->status == 'packing') {
-                                        $status_badge_class =
-                                            'bg-[#60a5fa] text-white border-blue-400 shadow-sm shadow-blue-200';
-                                    } elseif ($inventory->status == 'hold') {
-                                        $status_badge_class =
-                                            'bg-amber-500 text-white border-amber-500 shadow-sm shadow-amber-200';
-                                    } elseif ($inventory->status == 'expired') {
-                                        $status_badge_class =
-                                            'bg-red-500 text-white border-red-600 shadow-sm shadow-red-200';
-                                    }
-                                @endphp
-                                <span
-                                    class="inline-block px-3 py-1 rounded-[6px] text-[11px] font-bold {{ $status_badge_class }}">
-                                    {{ ucfirst($inventory->status) }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-center font-bold text-[14px]">

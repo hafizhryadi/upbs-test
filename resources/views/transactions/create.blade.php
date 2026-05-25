@@ -82,20 +82,9 @@
                     </select>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                    <div>
-                        <label for="expiry_date" class="block text-[14px] font-semibold text-slate-700 mb-2">Masa Edar / ED</label>
-                        <input type="date" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="expiry_date" name="expiry_date" value="{{ old('expiry_date') }}">
-                    </div>
-                    <div>
-                        <label for="status" class="block text-[14px] font-semibold text-slate-700 mb-2">Status Stok</label>
-                        <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="status" name="status">
-                            <option value="ready" {{ old('status') == 'ready' ? 'selected' : '' }}>Ready (Siap Jual)</option>
-                            <option value="packing" {{ old('status') == 'packing' ? 'selected' : '' }}>Packing (Dalam Kemasan)</option>
-                            <option value="hold" {{ old('status') == 'hold' ? 'selected' : '' }}>Hold (Tertahan)</option>
-                            <option value="expired" {{ old('status') == 'expired' ? 'selected' : '' }}>Expired (Kadaluarsa)</option>
-                        </select>
-                    </div>
+                <div class="mb-5">
+                    <label for="expiry_date" class="block text-[14px] font-semibold text-slate-700 mb-2">Masa Edar / ED</label>
+                    <input type="date" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="expiry_date" name="expiry_date" value="{{ old('expiry_date') }}">
                 </div>
             </div>
 
@@ -168,7 +157,6 @@
         const varietyInput = document.getElementById('variety_id');
         const locationInput = document.getElementById('location_id');
         const expiryInput = document.getElementById('expiry_date');
-        const statusInput = document.getElementById('status');
         
         const inventoryInput = document.getElementById('inventory_id');
         const categoryInput = document.getElementById('category');
@@ -180,7 +168,6 @@
             varietyInput.setAttribute('required', 'required');
             locationInput.setAttribute('required', 'required');
             expiryInput.setAttribute('required', 'required');
-            statusInput.setAttribute('required', 'required');
             
             inventoryInput.removeAttribute('required');
             categoryInput.removeAttribute('required');
@@ -191,7 +178,6 @@
             varietyInput.removeAttribute('required');
             locationInput.removeAttribute('required');
             expiryInput.removeAttribute('required');
-            statusInput.removeAttribute('required');
             
             inventoryInput.setAttribute('required', 'required');
             categoryInput.setAttribute('required', 'required');

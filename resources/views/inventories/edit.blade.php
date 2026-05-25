@@ -53,12 +53,6 @@
                                         <option value="ready"
                                             {{ old('status', $inventory->status) == 'ready' ? 'selected' : '' }}>Ready (Siap
                                             Jual)</option>
-                                        <option value="packing"
-                                            {{ old('status', $inventory->status) == 'packing' ? 'selected' : '' }}>Packing
-                                            (Dalam Kemasan)</option>
-                                        <option value="hold"
-                                            {{ old('status', $inventory->status) == 'hold' ? 'selected' : '' }}>Hold
-                                            (Tertahan)</option>
                                         <option value="expired"
                                             {{ old('status', $inventory->status) == 'expired' ? 'selected' : '' }}>Expired
                                             (Kadaluarsa)</option>

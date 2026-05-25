@@ -114,8 +114,8 @@
                             <div class="font-medium text-[13px] text-slate-800">{{ $trx->variety->name ?? '-' }}</div>
                         </td>
                         <td class="px-6 py-4 text-center">
-                            @if($trx->batch_code)
-                                <span class="font-mono text-[11px] bg-slate-100 px-2 py-1 rounded text-slate-600 border border-slate-200">{{ $trx->batch_code }}</span>
+                            @if($trx->inventory && $trx->inventory->batch_code)
+                                <span class="font-mono text-[11px] bg-slate-100 px-2 py-1 rounded text-slate-600 border border-slate-200">{{ $trx->inventory->batch_code }}</span>
                             @else
                                 <span class="text-[12px] text-slate-400">-</span>
                             @endif
