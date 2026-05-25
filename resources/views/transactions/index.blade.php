@@ -96,6 +96,7 @@
                 <tr>
                     <th scope="col" class="px-6 py-4 font-bold w-16">No</th>
                     <th scope="col" class="px-6 py-4 font-bold">Varietas</th>
+                    <th scope="col" class="px-6 py-4 font-bold text-center">Kode Batch</th>
                     <th scope="col" class="px-6 py-4 font-bold text-center">Jumlah (kg)</th>
                     <th scope="col" class="px-6 py-4 font-bold text-center">Tanggal</th>
                     <th scope="col" class="px-6 py-4 font-bold text-center">Kategori</th>
@@ -111,6 +112,13 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="font-medium text-[13px] text-slate-800">{{ $trx->variety->name ?? '-' }}</div>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            @if($trx->batch_code)
+                                <span class="font-mono text-[11px] bg-slate-100 px-2 py-1 rounded text-slate-600 border border-slate-200">{{ $trx->batch_code }}</span>
+                            @else
+                                <span class="text-[12px] text-slate-400">-</span>
+                            @endif
                         </td>
                         <td class="px-6 py-4 text-center">
                             <div class="font-bold text-[14px] {{ $trx->trx_type == 'masuk' ? 'text-[#a855f7]' : 'text-slate-700' }}">
@@ -154,7 +162,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-10 text-center text-slate-500 text-[14px]">
+                        <td colspan="8" class="px-6 py-10 text-center text-slate-500 text-[14px]">
                             Belum ada riwayat transaksi.
                         </td>
                     </tr>

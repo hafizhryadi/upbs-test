@@ -57,8 +57,11 @@
                                 {{ $inventory->location->name ?? '-' }}
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <span
-                                    class="font-mono text-[12px] bg-slate-100 px-2 py-1 rounded text-slate-600 border border-slate-200">{{ $inventory->batch_code }}</span>
+                                @if($inventory->batch_code)
+                                    <span class="font-mono text-[12px] bg-slate-100 px-2 py-1 rounded text-slate-600 border border-slate-200">{{ $inventory->batch_code }}</span>
+                                @else
+                                    <span class="text-[12px] text-slate-400">-</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 text-center text-[12px]">
                                 <div class="text-slate-800 font-medium mb-1">

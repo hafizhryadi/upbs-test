@@ -17,6 +17,20 @@
     </div>
     
     <div class="p-6">
+        @if ($errors->any())
+            <div class="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-700">
+                <div class="flex items-center mb-2">
+                    <i class="bi bi-exclamation-triangle-fill mr-2 text-rose-500"></i>
+                    <span class="font-bold">Terjadi Kesalahan:</span>
+                </div>
+                <ul class="list-disc pl-5 text-[13px] space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form action="{{ route('transactions.store') }}" method="POST">
             @csrf
             
@@ -36,50 +50,50 @@
 
             <div class="mb-5">
                 <label for="trx_date" class="block text-[14px] font-semibold text-slate-700 mb-2">Tanggal Transaksi</label>
-                <input type="date" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="trx_date" name="trx_date" value="{{ date('Y-m-d') }}" required>
+                <input type="date" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="trx_date" name="trx_date" value="{{ old('trx_date', date('Y-m-d')) }}" required>
             </div>
-
-            <div class="mb-5">
-                <label for="variety_id" class="block text-[14px] font-semibold text-slate-700 mb-2">Pilih Varietas</label>
-                <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="variety_id" name="variety_id" required>
-                    <option value="" selected disabled>-- Pilih Varietas --</option>
-                    @foreach($varieties as $variety)
-                        @php
-                            $total_stock = $variety->inventories->sum('quantity');
-                        @endphp
-                        <option value="{{ $variety->id }}" data-stock="{{ $total_stock }}">
-                            {{ $variety->name }} (Total Sisa Stok: {{ $total_stock }} kg)
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            
-            <p id="fefo_info" class="text-[13px] text-slate-500 mb-5"><i class="bi bi-info-circle mr-1"></i>Sistem otomatis akan mengurangi stok dari batch yang paling awal mendekati masa kedaluwarsa (FEFO).</p>
 
             <!-- Fields for Masuk -->
             <div id="masuk_fields" style="display: none;">
+                <div class="mb-5">
+                    <label for="variety_id" class="block text-[14px] font-semibold text-slate-700 mb-2">Pilih Varietas Benih</label>
+                    <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="variety_id" name="variety_id">
+                        <option value="" selected disabled>-- Pilih Varietas --</option>
+                        @foreach($varieties as $variety)
+                            <option value="{{ $variety->id }}" {{ old('variety_id') == $variety->id ? 'selected' : '' }}>
+                                {{ $variety->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-5">
+                    <label for="batch_code" class="block text-[14px] font-semibold text-slate-700 mb-2">Kode Batch / Lot <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                    <input type="text" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="batch_code" name="batch_code" value="{{ old('batch_code') }}" placeholder="Contoh: LOT-12345">
+                </div>
+
                 <div class="mb-5">
                     <label for="location_id" class="block text-[14px] font-semibold text-slate-700 mb-2">Lokasi Gudang</label>
                     <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="location_id" name="location_id">
                         <option value="" selected disabled>-- Pilih Gudang --</option>
                         @foreach ($locations as $location)
-                            <option value="{{ $location->id }}">{{ $location->name }}</option>
+                            <option value="{{ $location->id }}" {{ old('location_id') == $location->id ? 'selected' : '' }}>{{ $location->name }}</option>
                         @endforeach
                     </select>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                     <div>
-                        <label for="expiry_date" class="block text-[14px] font-semibold text-slate-700 mb-2">Masa Edar</label>
-                        <input type="date" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="expiry_date" name="expiry_date">
+                        <label for="expiry_date" class="block text-[14px] font-semibold text-slate-700 mb-2">Masa Edar / ED</label>
+                        <input type="date" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="expiry_date" name="expiry_date" value="{{ old('expiry_date') }}">
                     </div>
                     <div>
-                        <label for="status" class="block text-[14px] font-semibold text-slate-700 mb-2">Status</label>
+                        <label for="status" class="block text-[14px] font-semibold text-slate-700 mb-2">Status Stok</label>
                         <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="status" name="status">
-                            <option value="ready">Ready (Siap Jual)</option>
-                            <option value="packing">Packing (Dalam Kemasan)</option>
-                            <option value="hold">Hold (Tertahan)</option>
-                            <option value="expired">Expired (Kadaluarsa)</option>
+                            <option value="ready" {{ old('status') == 'ready' ? 'selected' : '' }}>Ready (Siap Jual)</option>
+                            <option value="packing" {{ old('status') == 'packing' ? 'selected' : '' }}>Packing (Dalam Kemasan)</option>
+                            <option value="hold" {{ old('status') == 'hold' ? 'selected' : '' }}>Hold (Tertahan)</option>
+                            <option value="expired" {{ old('status') == 'expired' ? 'selected' : '' }}>Expired (Kadaluarsa)</option>
                         </select>
                     </div>
                 </div>
@@ -88,22 +102,35 @@
             <!-- Fields for Keluar -->
             <div id="keluar_fields">
                 <div class="mb-5">
+                    <label for="inventory_id" class="block text-[14px] font-semibold text-slate-700 mb-2">Pilih Batch / Lot Fisik</label>
+                    <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="inventory_id" name="inventory_id">
+                        <option value="" selected disabled>-- Pilih Spesifik Stok --</option>
+                        @foreach($inventories as $inv)
+                            <option value="{{ $inv->id }}" {{ old('inventory_id') == $inv->id ? 'selected' : '' }}>
+                                {{ $inv->batch_code ? '['.$inv->batch_code.'] ' : '' }}{{ $inv->variety->name ?? 'Varietas Unknown' }} - Sisa: {{ $inv->quantity }} kg (ED: {{ \Carbon\Carbon::parse($inv->expiry_date)->format('d M Y') }})
+                            </option>
+                        @endforeach
+                    </select>
+                    <p class="text-[12px] text-slate-500 mt-1.5"><i class="bi bi-info-circle mr-1"></i>Daftar diurutkan mulai dari stok yang masa edarnya paling cepat habis (Rekomendasi FEFO).</p>
+                </div>
+
+                <div class="mb-5">
                     <label for="category" class="block text-[14px] font-semibold text-slate-700 mb-2">Kategori Pengeluaran</label>
                     <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="category" name="category">
-                        <option value="penjualan">Penjualan</option>
-                        <option value="diseminasi">Diseminasi</option>
+                        <option value="penjualan" {{ old('category') == 'penjualan' ? 'selected' : '' }}>Penjualan</option>
+                        <option value="diseminasi" {{ old('category') == 'diseminasi' ? 'selected' : '' }}>Diseminasi</option>
                     </select>
                 </div>
             </div>
 
             <div class="mb-5">
                 <label for="quantity" class="block text-[14px] font-semibold text-slate-700 mb-2">Jumlah (kg)</label>
-                <input type="number" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="quantity" name="quantity" min="1" placeholder="0" required>
+                <input type="number" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="quantity" name="quantity" min="1" value="{{ old('quantity') }}" placeholder="0" required>
             </div>
 
             <div class="mb-5">
                 <label for="note" class="block text-[14px] font-semibold text-slate-700 mb-2">Catatan</label>
-                <textarea class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="note" name="note" rows="3" placeholder="Masukkan keterangan tambahan jika ada"></textarea>
+                <textarea class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="note" name="note" rows="3" placeholder="Masukkan keterangan tambahan jika ada">{{ old('note') }}</textarea>
             </div>
 
             <div class="flex items-center justify-between mt-8 pt-6 border-t border-slate-100">
@@ -136,31 +163,37 @@
         const trxType = document.getElementById('trx_type_input').value;
         const masukFields = document.getElementById('masuk_fields');
         const keluarFields = document.getElementById('keluar_fields');
-        const fefoInfo = document.getElementById('fefo_info');
         
         // Elements for required toggle
+        const varietyInput = document.getElementById('variety_id');
         const locationInput = document.getElementById('location_id');
         const expiryInput = document.getElementById('expiry_date');
         const statusInput = document.getElementById('status');
+        
+        const inventoryInput = document.getElementById('inventory_id');
         const categoryInput = document.getElementById('category');
 
         if (trxType === 'masuk') {
             masukFields.style.display = 'block';
             keluarFields.style.display = 'none';
-            fefoInfo.style.display = 'none';
             
+            varietyInput.setAttribute('required', 'required');
             locationInput.setAttribute('required', 'required');
             expiryInput.setAttribute('required', 'required');
             statusInput.setAttribute('required', 'required');
+            
+            inventoryInput.removeAttribute('required');
             categoryInput.removeAttribute('required');
         } else {
             masukFields.style.display = 'none';
             keluarFields.style.display = 'block';
-            fefoInfo.style.display = 'block';
             
+            varietyInput.removeAttribute('required');
             locationInput.removeAttribute('required');
             expiryInput.removeAttribute('required');
             statusInput.removeAttribute('required');
+            
+            inventoryInput.setAttribute('required', 'required');
             categoryInput.setAttribute('required', 'required');
         }
     }
