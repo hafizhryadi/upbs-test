@@ -32,7 +32,7 @@
 
         <!-- Table -->
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-slate-700">
+            <table class="w-full text-left text-slate-700 whitespace-nowrap min-w-[800px]">
                 <thead class="text-[13px] text-slate-800 bg-white border-b border-slate-200">
                     <tr>
                         <th scope="col" class="px-6 py-4 font-bold w-12">No</th>

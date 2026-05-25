@@ -16,58 +16,63 @@
 </head>
 
 <body
-    class="bg-[#f8f9fc] text-slate-800 font-sans antialiased min-h-screen flex selection:bg-emerald-200 selection:text-emerald-900">
+    class="bg-[#f8f9fc] text-slate-800 font-sans antialiased min-h-screen flex flex-col md:flex-row selection:bg-emerald-200 selection:text-emerald-900">
 
     <!-- Sidebar -->
-    <aside class="w-64 bg-[#0a5c36] text-white flex flex-col justify-between fixed h-full z-20 shadow-xl">
+    <aside class="w-full md:w-64 bg-[#0a5c36] text-white flex flex-col justify-between md:fixed h-auto md:h-full z-20 shadow-xl relative">
         <div>
             <!-- Logo area -->
-            <div class="p-6 border-b border-white/10">
-                <a class="text-2xl font-bold tracking-tight" href="{{ route('home') }}">UPBS Beras BBRMP</a>
-                <p class="text-xs text-white/70 mt-1 font-medium">Panel Admin</p>
+            <div class="p-4 md:p-6 border-b border-white/10 flex justify-between items-center md:block">
+                <div>
+                    <a class="text-xl md:text-2xl font-bold tracking-tight" href="{{ route('home') }}">UPBS BBRMP</a>
+                    <p class="text-xs text-white/70 mt-1 font-medium hidden md:block">Panel Admin</p>
+                </div>
+                <a href="{{ route('logout') }}" class="md:hidden flex items-center text-sm font-medium text-white/90 hover:text-white bg-white/10 hover:bg-red-500/80 px-3 py-1.5 rounded-md transition-all">
+                    <i class="bi bi-box-arrow-right mr-1.5"></i> Keluar
+                </a>
             </div>
 
             <!-- Navigation -->
-            <nav class="mt-6 px-4 space-y-1">
+            <nav class="mt-4 md:mt-6 px-4 space-y-0 md:space-y-1 flex flex-row md:flex-col overflow-x-auto gap-2 md:gap-0 pb-2 md:pb-0">
                 <a href="{{ route('dashboard') }}"
-                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('dashboard') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
+                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 whitespace-nowrap {{ request()->routeIs('dashboard') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
                     <i class="bi bi-house mr-3 text-lg {{ request()->routeIs('dashboard') ? 'text-emerald-300' : '' }}"></i>
                     Beranda
                 </a>
                 <a href="{{ route('locations.index') }}"
-                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('locations.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
+                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 whitespace-nowrap {{ request()->routeIs('locations.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
                     <i class="bi bi-geo-alt mr-3 text-lg {{ request()->routeIs('locations.*') ? 'text-emerald-300' : '' }}"></i>
                     Lokasi Gudang
                 </a>
                 <a href="{{ route('varieties.index') }}"
-                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('varieties.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
+                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 whitespace-nowrap {{ request()->routeIs('varieties.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
                     <i class="bi bi-tags mr-3 text-lg {{ request()->routeIs('varieties.*') ? 'text-emerald-300' : '' }}"></i>
                     Varietas
                 </a>
                 <a href="{{ route('inventories.index') }}"
-                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('inventories.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
+                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 whitespace-nowrap {{ request()->routeIs('inventories.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
                     <i class="bi bi-box-seam mr-3 text-lg {{ request()->routeIs('inventories.*') ? 'text-emerald-300' : '' }}"></i>
                     Ketersediaan
                 </a>
                 <a href="{{ route('transactions.index') }}"
-                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('transactions.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
+                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 whitespace-nowrap {{ request()->routeIs('transactions.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
                     <i class="bi bi-credit-card mr-3 text-lg {{ request()->routeIs('transactions.*') ? 'text-emerald-300' : '' }}"></i>
                     Input Stok
                 </a>
                 <a href="{{ route('request.index') }}"
-                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('request.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
+                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 whitespace-nowrap {{ request()->routeIs('request.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
                     <i class="bi bi-clipboard-data mr-3 text-lg {{ request()->routeIs('request.*') ? 'text-emerald-300' : '' }}"></i>
                     Permohonan Benih
                 </a>
                 <a href="{{ route('report.index') }}"
-                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('report.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
+                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 whitespace-nowrap {{ request()->routeIs('report.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
                     <i class="bi bi-file-earmark-text mr-3 text-lg {{ request()->routeIs('report.*') ? 'text-emerald-300' : '' }}"></i>
                     Laporan
                 </a>
             </nav>
         </div>
 
-        <div class="p-5">
+        <div class="p-4 md:p-5 hidden md:block">
             <div class="border-t border-white/10 pt-5 pb-3 flex items-center">
                 <div class="bg-white/10 rounded-full w-10 h-10 flex items-center justify-center mr-3">
                     <i class="bi bi-people-fill text-white"></i>
@@ -85,7 +90,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 ml-64 min-h-screen flex flex-col bg-[#f8f9fc]">
+    <main class="flex-1 md:ml-64 min-h-screen flex flex-col bg-[#f8f9fc]">
         @if (session('success'))
             <div
                 class="m-8 mb-0 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-between shadow-sm">
@@ -102,7 +107,7 @@
             </div>
         @endif
 
-        <div class="p-8 flex-1">
+        <div class="p-4 md:p-8 flex-1">
             @yield('content')
         </div>
 

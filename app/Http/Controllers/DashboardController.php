@@ -28,8 +28,8 @@ class DashboardController extends Controller
             return $item->total_quantity < 100 || \Carbon\Carbon::parse($item->expiry_date)->isPast() || \Carbon\Carbon::parse($item->expiry_date)->lte(now()->addMonths(3));
         })->count();
 
-        $trx_in = Inventory::count();
-        $trx_out = Transaction::count();
+        $trx_in = Transaction::where('trx_type', 'masuk')->sum('quantity');
+        $trx_out = Transaction::where('trx_type', 'keluar')->sum('quantity');
 
         return view('welcome', compact('total_varieties', 'total_stock', 'recent_transactions', 'stock_by_expiry', 'low_stock_count', 'trx_in', 'trx_out'));
     }

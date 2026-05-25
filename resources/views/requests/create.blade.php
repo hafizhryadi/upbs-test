@@ -3,182 +3,106 @@
 @section('title', 'Permohonan Benih - UPBS BBRMP SumSel')
 
 @section('content')
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: #f8fafc;
-        }
+    
+    <div class="py-12 mt-10 min-h-screen">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden mt-8" data-aos="fade-up" data-aos-duration="800">
+                <div class="bg-gradient-to-br from-green-600 to-green-800 text-white p-8 text-center">
+                    <i class="bi bi-file-earmark-text text-5xl mb-4 block"></i>
+                    <h2 class="text-2xl md:text-3xl font-bold mb-2">Form Pengajuan Layanan Benih</h2>
+                    <p class="opacity-80 text-sm md:text-base">Silakan isi formulir di bawah ini dengan data yang valid dan lengkap.</p>
+                </div>
 
-        .text-green {
-            color: #16a34a;
-        }
+                <div class="p-6 md:p-10">
+                    @if ($errors->any())
+                        <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg mb-6">
+                            <div class="flex items-center mb-2">
+                                <i class="bi bi-exclamation-triangle-fill text-xl mr-2"></i>
+                                <strong class="text-lg">Terdapat kesalahan!</strong>
+                            </div>
+                            <ul class="list-disc list-inside ml-2">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
-        .bg-green {
-            background-color: #16a34a;
-        }
+                    <form action="{{ route('request.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Data Pemohon -->
+                            <div class="col-span-1 md:col-span-2">
+                                <h5 class="font-bold text-slate-800 border-b border-slate-200 pb-2 mb-4 mt-2">
+                                    <i class="bi bi-person-fill text-green-600 mr-2"></i>Data Pemohon
+                                </h5>
+                            </div>
+                            <div>
+                                <label for="nama" class="block font-semibold text-slate-600 mb-2">Nama Lengkap</label>
+                                <input type="text" class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:border-green-600 focus:ring-2 focus:ring-green-200 transition-all outline-none" id="nama" name="nama" value="{{ old('nama') }}" placeholder="Masukkan nama lengkap" required>
+                            </div>
+                            <div>
+                                <label for="phone" class="block font-semibold text-slate-600 mb-2">Nomor Telepon/WA</label>
+                                <input type="text" class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:border-green-600 focus:ring-2 focus:ring-green-200 transition-all outline-none" id="phone" name="phone" value="{{ old('phone') }}" placeholder="Contoh: 081234567890" required>
+                            </div>
+                            <div>
+                                <label for="email" class="block font-semibold text-slate-600 mb-2">Email (Opsional)</label>
+                                <input type="email" class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:border-green-600 focus:ring-2 focus:ring-green-200 transition-all outline-none" id="email" name="email" value="{{ old('email') }}" placeholder="contoh@email.com">
+                            </div>
+                            <div class="col-span-1 md:col-span-2">
+                                <label for="alamat" class="block font-semibold text-slate-600 mb-2">Alamat Lengkap</label>
+                                <textarea class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:border-green-600 focus:ring-2 focus:ring-green-200 transition-all outline-none" id="alamat" name="alamat" rows="3" placeholder="Masukkan alamat lengkap pengiriman" required>{{ old('alamat') }}</textarea>
+                            </div>
 
-        .form-control {
-            padding: 0.75rem 1.25rem;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
-            background-color: #f9fafb;
-            transition: all 0.3s;
-        }
-
-        .form-control:focus {
-            border-color: #16a34a;
-            box-shadow: 0 0 0 0.25rem rgba(22, 163, 74, 0.25);
-            background-color: #fff;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #4b5563;
-            margin-bottom: 0.5rem;
-        }
-
-        .btn-green {
-            background: #16a34a;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.4);
-        }
-
-        .btn-green:hover {
-            background: #15803d;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.5);
-        }
-
-        .btn-outline-secondary {
-            border-radius: 8px;
-            font-weight: 600;
-            padding: 12px 30px;
-        }
-
-        .card-header-custom {
-            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-            border-radius: 16px 16px 0 0 !important;
-        }
-    </style>
-
-    <div class="container py-5 mt-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10">
-                <div class="card shadow-lg border-0 rounded-4 mt-4" data-aos="fade-up" data-aos-duration="800">
-                    <div class="card-header-custom">
-                        <i class="bi bi-file-earmark-text fs-1 mb-2 d-block"></i>
-                        <h2 class="fw-bold mb-1">Form Pengajuan Layanan Benih</h2>
-                        <p class="mb-0 opacity-75">Silakan isi formulir di bawah ini dengan data yang valid dan lengkap.</p>
-                    </div>
-
-                    <div class="card-body p-5 bg-white rounded-bottom-4">
-                        @if ($errors->any())
-                            <div class="alert alert-danger rounded-3 border-0 bg-danger bg-opacity-10 text-danger p-4 mb-4">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
-                                    <strong class="fs-5">Terdapat kesalahan!</strong>
-                                </div>
-                                <ul class="mb-0 ps-3">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
+                            <!-- Detail Permohonan -->
+                            <div class="col-span-1 md:col-span-2 mt-6">
+                                <h5 class="font-bold text-slate-800 border-b border-slate-200 pb-2 mb-4">
+                                    <i class="bi bi-box-seam-fill text-green-600 mr-2"></i>Detail Permohonan
+                                </h5>
+                            </div>
+                            <div>
+                                <label for="benih" class="block font-semibold text-slate-600 mb-2">Varietas Benih yang Diminta</label>
+                                <select class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:border-green-600 focus:ring-2 focus:ring-green-200 transition-all outline-none" id="benih" name="benih" required>
+                                    <option value="" disabled selected>Pilih Varietas Benih</option>
+                                    @foreach ($varieties as $variety)
+                                        <option value="{{ $variety->name }}" {{ old('benih') == $variety->name ? 'selected' : '' }}>{{ $variety->name }}</option>
                                     @endforeach
-                                </ul>
+                                </select>
                             </div>
-                        @endif
-
-                        <form action="{{ route('request.store') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <div class="row g-4">
-                                <!-- Data Pemohon -->
-                                <div class="col-12">
-                                    <h5 class="fw-bold text-dark border-bottom pb-2 mb-3"><i
-                                            class="bi bi-person-fill text-green me-2"></i>Data Pemohon</h5>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="nama" class="form-label">Nama Lengkap</label>
-                                    <input type="text" class="form-control" id="nama" name="nama"
-                                        value="{{ old('nama') }}" placeholder="Masukkan nama lengkap" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="phone" class="form-label">Nomor Telepon/WA</label>
-                                    <input type="text" class="form-control" id="phone" name="phone"
-                                        value="{{ old('phone') }}" placeholder="Contoh: 081234567890" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="email" class="form-label">Email (Opsional)</label>
-                                    <input type="email" class="form-control" id="email" name="email"
-                                        value="{{ old('email') }}" placeholder="contoh@email.com">
-                                </div>
-                                <div class="col-12">
-                                    <label for="alamat" class="form-label">Alamat Lengkap</label>
-                                    <textarea class="form-control" id="alamat" name="alamat" rows="3"
-                                        placeholder="Masukkan alamat lengkap pengiriman" required>{{ old('alamat') }}</textarea>
-                                </div>
-
-                                <!-- Detail Permohonan -->
-                                <div class="col-12 mt-5">
-                                    <h5 class="fw-bold text-dark border-bottom pb-2 mb-3"><i
-                                            class="bi bi-box-seam-fill text-green me-2"></i>Detail Permohonan</h5>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="benih" class="form-label">Varietas Benih yang Diminta</label>
-                                    <select class="form-select form-control" id="benih" name="benih" required>
-                                        <option value="" disabled selected>Pilih Varietas Benih</option>
-                                        @foreach ($varieties as $variety)
-                                            <option value="{{ $variety->name }}"
-                                                {{ old('benih') == $variety->name ? 'selected' : '' }}>{{ $variety->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="jumlah" class="form-label">Jumlah (kg)</label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control border-end-0" id="jumlah"
-                                            name="jumlah" value="{{ old('jumlah') }}" min="1" placeholder="0"
-                                            required>
-                                        <span class="input-group-text bg-light border-start-0 text-muted">kg</span>
-                                    </div>
-                                </div>
-                                <div class="col-12 mt-4">
-                                    <label for="jenis" class="form-label">Jenis Permohonan</label>
-                                    <select class="form-select form-control" id="jenis" name="jenis" required>
-                                        <option value="" disabled selected>Pilih Jenis Permohonan</option>
-                                        <option value="pembelian" {{ old('jenis') == 'pembelian' ? 'selected' : '' }}>
-                                            Pembelian</option>
-                                        <option value="diseminasi" {{ old('jenis') == 'diseminasi' ? 'selected' : '' }}>
-                                            Diseminasi</option>
-                                    </select>
-                                </div>
-                                <div class="col-12 mt-4" id="surat_permohonan_container" style="display: none;">
-                                    <label for="surat_permohonan" class="form-label">Unggah Surat Permohonan</label>
-                                    <input class="form-control" type="file" id="surat_permohonan"
-                                        name="surat_permohonan" accept=".pdf,.jpg,.jpeg,.png">
-                                    <div class="form-text text-muted small mt-1"><i
-                                            class="bi bi-info-circle me-1"></i>Format yang didukung: PDF, JPG, PNG.
-                                        Maksimal ukuran 5MB.</div>
+                            <div>
+                                <label for="jumlah" class="block font-semibold text-slate-600 mb-2">Jumlah (kg)</label>
+                                <div class="flex">
+                                    <input type="number" class="w-full px-4 py-3 rounded-l-lg border border-r-0 border-slate-200 bg-slate-50 focus:bg-white focus:border-green-600 focus:ring-2 focus:ring-green-200 transition-all outline-none" id="jumlah" name="jumlah" value="{{ old('jumlah') }}" min="1" placeholder="0" required>
+                                    <span class="inline-flex items-center px-4 py-3 rounded-r-lg border border-l-0 border-slate-200 bg-slate-100 text-slate-500 font-medium">kg</span>
                                 </div>
                             </div>
-
-                            <div class="d-flex flex-column flex-md-row gap-3 mt-5 pt-3 border-top">
-                                <a href="{{ route('home') }}" class="btn btn-outline-secondary w-100"><i
-                                        class="bi bi-arrow-left me-2"></i>Kembali</a>
-                                <button type="submit" class="btn-green w-100"><i class="bi bi-send-fill me-2"></i>Kirim
-                                    Permohonan</button>
+                            <div class="col-span-1 md:col-span-2">
+                                <label for="jenis" class="block font-semibold text-slate-600 mb-2">Jenis Permohonan</label>
+                                <select class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:border-green-600 focus:ring-2 focus:ring-green-200 transition-all outline-none" id="jenis" name="jenis" required>
+                                    <option value="" disabled selected>Pilih Jenis Permohonan</option>
+                                    <option value="pembelian" {{ old('jenis') == 'pembelian' ? 'selected' : '' }}>Pembelian</option>
+                                    <option value="diseminasi" {{ old('jenis') == 'diseminasi' ? 'selected' : '' }}>Diseminasi</option>
+                                </select>
                             </div>
-                        </form>
-                    </div>
+                            <div class="col-span-1 md:col-span-2" id="surat_permohonan_container" style="display: none;">
+                                <label for="surat_permohonan" class="block font-semibold text-slate-600 mb-2">Unggah Surat Permohonan</label>
+                                <input class="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:border-green-600 transition-all outline-none file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100" type="file" id="surat_permohonan" name="surat_permohonan" accept=".pdf,.jpg,.jpeg,.png">
+                                <p class="text-slate-500 text-sm mt-2">
+                                    <i class="bi bi-info-circle mr-1"></i>Format yang didukung: PDF, JPG, PNG. Maksimal ukuran 5MB.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row gap-4 mt-10 pt-6 border-t border-slate-200">
+                            <a href="{{ route('home') }}" class="w-full md:w-1/2 flex justify-center items-center px-6 py-3 border-2 border-slate-300 text-slate-700 font-semibold rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                                <i class="bi bi-arrow-left mr-2"></i>Kembali
+                            </a>
+                            <button type="submit" class="w-full md:w-1/2 flex justify-center items-center px-6 py-3 bg-[#16a34a] hover:bg-[#15803d] text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5">
+                                <i class="bi bi-send-fill mr-2"></i>Kirim Permohonan
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -186,10 +110,7 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({
-            once: true,
-            duration: 800
-        });
+        AOS.init({ once: true, duration: 800 });
 
         document.addEventListener('DOMContentLoaded', function() {
             const jenisSelect = document.getElementById('jenis');

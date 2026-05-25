@@ -13,9 +13,20 @@ class TransactionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $transactions = Transaction::with('variety')->latest()->get();
+        $query = Transaction::with('variety')->latest();
+
+        if ($request->filled('start_date')) {
+            $query->whereDate('trx_date', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $query->whereDate('trx_date', '<=', $request->end_date);
+        }
+
+        $transactions = $query->get();
+
         return view('transactions.index', compact('transactions'));
     }
 

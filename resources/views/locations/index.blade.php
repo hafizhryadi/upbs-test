@@ -33,10 +33,10 @@
 
     <!-- Table -->
     <div class="overflow-x-auto">
-        <table class="w-full text-left text-slate-700">
+        <table class="w-full text-left text-slate-700 whitespace-nowrap min-w-[800px]">
             <thead class="text-[14px] text-slate-800 bg-white border-b border-slate-200">
                 <tr>
-                    <th scope="col" class="px-8 py-5 font-bold w-24">ID</th>
+                    <th scope="col" class="px-8 py-5 font-bold w-24">No</th>
                     <th scope="col" class="px-8 py-5 font-bold">Nama Lokasi</th>
                     <th scope="col" class="px-8 py-5 font-bold">Alamat</th>
                     <th scope="col" class="px-8 py-5 font-bold text-center w-32">Aksi</th>
@@ -46,7 +46,7 @@
                 @forelse($locations as $index => $location)
                     <tr class="bg-white border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
                         <td class="px-8 py-5 font-bold text-slate-800 text-[14px]">
-                            {{ str_pad($loop->iteration, 3, '0', STR_PAD_LEFT) }}
+                            {{ $loop->iteration }}
                         </td>
                         <td class="px-8 py-5 font-medium text-[14px]">
                             {{ $location->name }}

@@ -76,6 +76,18 @@ class ReportController extends Controller
         }
         
         $monthName = Carbon::create($year, $month, 1)->locale('id')->translatedFormat('F');
+        
+        $firstDayOfMonth = Carbon::create($year, $month, 1)->startOfDay();
+        
+        $stokAwalMasuk = \App\Models\Transaction::where('trx_type', 'masuk')
+            ->where('trx_date', '<', $firstDayOfMonth)
+            ->sum('quantity');
+        $stokAwalKeluar = \App\Models\Transaction::where('trx_type', 'keluar')
+            ->where('trx_date', '<', $firstDayOfMonth)
+            ->sum('quantity');
+            
+        $stokAkhirBulanLalu = $stokAwalMasuk - $stokAwalKeluar;
+
         $transactionsMasuk = \App\Models\Transaction::with(['variety'])
             ->where('trx_type', 'masuk')
             ->whereYear('trx_date', $year)
@@ -151,7 +163,10 @@ class ReportController extends Controller
         $chartContents = @file_get_contents($chartUrlRaw, false, $ctx);
         $chartUrl = $chartContents ? 'data:image/png;base64,' . base64_encode($chartContents) : null;
 
-        $pdf =  Pdf::loadView('reports.pdf', compact('transactionsMasuk', 'transactionsKeluar', 'monthName', 'year', 'chartUrl'));
+        $transactionsPenjualan = $transactionsKeluar->where('category', 'penjualan');
+        $transactionsDiseminasi = $transactionsKeluar->where('category', 'diseminasi');
+
+        $pdf =  Pdf::loadView('reports.pdf', compact('transactionsMasuk', 'transactionsKeluar', 'transactionsPenjualan', 'transactionsDiseminasi', 'monthName', 'year', 'chartUrl', 'stokAkhirBulanLalu'));
         $pdf->setPaper('A4', 'portrait');
         
         $pdfFileName = "Laporan_Bulanan_{$monthName}_{$year}.pdf";

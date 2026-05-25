@@ -3,360 +3,68 @@
 @section('title', '- Unit Pengelola Benih Sumber')
 
 @section('content')
-    <!-- Add Google Fonts and AOS -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Add AOS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .text-green {
-            color: #16a34a;
-        }
-
-        .bg-green {
-            background-color: #16a34a;
-        }
-
-        /* Hero section */
-        .hero {
-            position: relative;
-            min-height: 90vh;
-            background: url('{{ asset('images/hero_bg.jpeg') }}') center/cover no-repeat;
-            display: flex;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            /* semi-transparent black for readablity */
-            z-index: 1;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            padding-top: 100px;
-        }
-
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: #fff;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Buttons */
-        .btn-green {
-            background: #16a34a;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.4);
-        }
-
-        .btn-green:hover {
-            background: #15803d;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .btn-outline-green {
-            background: transparent;
-            color: #16a34a;
-            border: 2px solid #16a34a;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            background: rgba(255, 255, 255, 0.9);
-        }
-
-        .btn-outline-green:hover {
-            background: #16a34a;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        /* Polaroids */
-        .polaroid {
-            background: #fff;
-            padding: 15px 15px 50px 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            position: relative;
-            border-radius: 2px;
-            display: inline-block;
-            transition: transform 0.3s;
-        }
-
-        .polaroid:hover {
-            transform: scale(1.05) rotate(0deg) !important;
-            z-index: 10 !important;
-        }
-
-        .polaroid img {
-            width: 100%;
-            max-width: 300px;
-            height: auto;
-            display: block;
-        }
-
-        .tape {
-            width: 120px;
-            height: 35px;
-            background: rgba(255, 255, 255, 0.5);
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            backdrop-filter: blur(5px);
-            transform: translateX(-50%) rotate(-3deg);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .polaroid-1 {
-            transform: rotate(-5deg);
-            top: 20px;
-            z-index: 3;
-        }
-
-        .polaroid-2 {
-            transform: rotate(3deg);
-            margin-top: -30px;
-            z-index: 2;
-        }
-
-        .polaroid-3 {
-            transform: rotate(7deg);
-            top: 30px;
-            z-index: 4;
-        }
-
-        /* Sections */
-        .section-title {
-            font-weight: 800;
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            color: #111827;
-            position: relative;
-            display: inline-block;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            width: 50%;
-            height: 4px;
-            background: #16a34a;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 2px;
-        }
-
-        .about-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #4b5563;
-        }
-
-        /* Process cards */
-        .step-circle {
-            width: 80px;
-            height: 80px;
-            background: #dcfce7;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #16a34a;
-            margin: 0 auto 1.5rem auto;
-            box-shadow: 0 4px 10px rgba(22, 163, 74, 0.2);
-        }
-
-        .variety-card {
-            padding: 30px 20px;
-            border-radius: 12px;
-            transition: all 0.3s;
-            border: 1px solid #f3f4f6;
-            background: #fff;
-        }
-
-        .variety-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
-            border-color: #dcfce7;
-        }
-
-        .requirements-list li {
-            margin-bottom: 12px;
-            font-size: 1.1rem;
-            color: #4b5563;
-            position: relative;
-            padding-left: 30px;
-        }
-
-        .requirements-list li::before {
-            content: '\F633';
-            /* Bootstrap check-circle */
-            font-family: 'bootstrap-icons';
-            position: absolute;
-            left: 0;
-            top: 2px;
-            color: #16a34a;
-        }
-
-        .hover-white {
-            transition: color 0.3s;
-        }
-
-        .hover-white:hover {
-            color: #ffffff !important;
-        }
-
-        /* Popup Modal */
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(5px);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .popup-overlay.show {
-            opacity: 1;
-        }
-
-        .popup-content {
-            background: #fff;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 500px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transform: translateY(20px);
-            transition: transform 0.4s ease;
-        }
-
-        .popup-overlay.show .popup-content {
-            transform: translateY(0);
-        }
-
-        .popup-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 10;
-            transition: background 0.3s;
-        }
-
-        .popup-close:hover {
-            background: rgba(220, 38, 38, 0.8);
-        }
-
-        .popup-img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-        }
-
-        .popup-body {
-            padding: 30px;
-            text-align: center;
-        }
-
-        .popup-title {
-            font-weight: 800;
-            color: #111827;
-            margin-bottom: 10px;
-            font-size: 1.5rem;
-        }
-
-        .popup-text {
-            color: #4b5563;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
+        /* Polaroids animations */
+        .polaroid-1 { transform: rotate(-5deg); top: 20px; z-index: 3; }
+        .polaroid-2 { transform: rotate(3deg); margin-top: -30px; z-index: 2; }
+        .polaroid-3 { transform: rotate(7deg); top: 30px; z-index: 4; }
+        .polaroid:hover { transform: scale(1.05) rotate(0deg) !important; z-index: 10 !important; }
     </style>
 
     <!-- Initial Popup Overlay -->
-    <div id="welcomePopup" class="popup-overlay" style="display: none;">
-        <div class="popup-content">
-            <button class="popup-close" id="closePopupBtn">&times;</button>
-            <img src="{{ asset('images/hero_bg.jpeg') }}" alt="Survey Image" class="popup-img">
-            <div class="popup-body">
-                <h3 class="popup-title">Survei Kepuasan Layanan</h3>
-                <p class="popup-text">Bantu kami meningkatkan kualitas layanan dengan mengisi survei kepuasan pelanggan.
-                    Penilaian Anda sangat berarti bagi kami.</p>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLScPKtQAlCjo1NYUh1YVqcx7J_sZi6XELs3lFCHb7TCQH0r6ag/viewform"
-                    class="btn-green d-inline-block mt-2 text-decoration-none" target="_blank">Isi Survei Sekarang</a>
+    <div id="welcomePopup" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[9999] flex items-center justify-center opacity-0 transition-opacity duration-400 ease-out" style="display: none;">
+        <div class="bg-white rounded-2xl w-[90%] max-w-[500px] overflow-hidden relative shadow-2xl translate-y-5 transition-transform duration-400 ease-out popup-content">
+            <button id="closePopupBtn" class="absolute top-4 right-4 bg-black/50 hover:bg-red-600/80 text-white border-none w-8 h-8 rounded-full flex items-center justify-center cursor-pointer z-10 transition-colors">
+                <i class="bi bi-x text-xl"></i>
+            </button>
+            <img src="{{ asset('images/hero_bg.jpeg') }}" alt="Survey Image" class="w-full h-[250px] object-cover">
+            <div class="p-8 text-center">
+                <h3 class="font-extrabold text-slate-900 mb-2 text-2xl">Survei Kepuasan Layanan</h3>
+                <p class="text-slate-600 mb-6 leading-relaxed">Bantu kami meningkatkan kualitas layanan dengan mengisi survei kepuasan pelanggan. Penilaian Anda sangat berarti bagi kami.</p>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLScPKtQAlCjo1NYUh1YVqcx7J_sZi6XELs3lFCHb7TCQH0r6ag/viewform" target="_blank" class="inline-block bg-[#16a34a] hover:bg-[#15803d] text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:-translate-y-0.5">Isi Survei Sekarang</a>
             </div>
         </div>
     </div>
 
     <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-overlay"></div>
-        <div class="container hero-content">
-            <div class="row align-items-center">
-                <div class="col-lg-12 text-center" data-aos="fade-up" data-aos-duration="1000">
-                    <h1 class="hero-title mb-4">Unit Pengelola Benih Sumber<br>(UPBS) BBRMP SumSel</h1>
-                    <div class="d-flex justify-content-center gap-3 mt-4 mb-5 position-relative" style="z-index: 20;">
-                        <a href="{{ route('request.create') }}" class="btn-green text-decoration-none">Pengajuan Layanan</a>
-                        <a href="{{ route('stok.index') }}" class="btn-outline-green text-decoration-none">Cek Stok</a>
-                    </div>
+    <section class="relative min-h-[90vh] flex items-center overflow-hidden bg-cover bg-center bg-no-repeat" style="background-image: url('{{ asset('images/hero_bg.jpeg') }}')">
+        <div class="absolute inset-0 bg-black/50 z-0"></div>
+        <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+            <div class="text-center" data-aos="fade-up" data-aos-duration="1000">
+                <h1 class="text-white font-extrabold text-4xl md:text-5xl lg:text-6xl mb-6 drop-shadow-lg">
+                    Unit Pengelola Benih Sumber<br>(UPBS) BBRMP Sumatera Selatan
+                </h1>
+                
+                <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8 mb-16 relative z-20 px-4 sm:px-0">
+                    <a href="{{ route('request.create') }}" class="bg-[#16a34a] hover:bg-[#15803d] text-white px-8 py-3.5 rounded-lg font-bold transition-all shadow-lg shadow-green-600/40 hover:-translate-y-1 w-full sm:w-auto">
+                        Pengajuan Layanan
+                    </a>
+                    <a href="{{ route('stok.index') }}" class="bg-white/90 hover:bg-[#16a34a] hover:text-white text-[#16a34a] border-2 border-[#16a34a] px-8 py-3.5 rounded-lg font-bold transition-all shadow-lg hover:-translate-y-1 w-full sm:w-auto">
+                        Cek Stok
+                    </a>
+                </div>
 
-                    <!-- Polaroids -->
-                    <div class="row justify-content-center mt-5 pt-4" style="perspective: 1000px;">
-                        <div class="col-md-3 d-none d-md-block" data-aos="fade-up" data-aos-delay="200">
-                            <div class="polaroid polaroid-1">
-                                <div class="tape"></div>
-                                <img src="{{ asset('images/office.jpeg') }}" alt="Seed Storage">
-                            </div>
+                <!-- Polaroids -->
+                <div class="hidden md:flex justify-center mt-12 pt-10" style="perspective: 1000px;">
+                    <div class="w-1/4 px-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="polaroid polaroid-1 bg-white p-4 pb-12 shadow-2xl relative inline-block transition-transform duration-300">
+                            <div class="absolute -top-4 left-1/2 -translate-x-1/2 -rotate-3 w-32 h-9 bg-white/50 backdrop-blur-[5px] border border-white/30 shadow-sm"></div>
+                            <img src="{{ asset('images/office.jpeg') }}" alt="Seed Storage" class="w-full max-w-[300px] h-auto block">
                         </div>
-                        <div class="col-md-3 d-none d-md-block" data-aos="fade-down" data-aos-delay="300">
-                            <div class="polaroid polaroid-2">
-                                <div class="tape"></div>
-                                <img src="{{ asset('images/seed_storage2.jpeg') }}" alt="Seed Preparation">
-                            </div>
+                    </div>
+                    <div class="w-1/4 px-4" data-aos="fade-down" data-aos-delay="300">
+                        <div class="polaroid polaroid-2 bg-white p-4 pb-12 shadow-2xl relative inline-block transition-transform duration-300">
+                            <div class="absolute -top-4 left-1/2 -translate-x-1/2 -rotate-3 w-32 h-9 bg-white/50 backdrop-blur-[5px] border border-white/30 shadow-sm"></div>
+                            <img src="{{ asset('images/seed_storage2.jpeg') }}" alt="Seed Preparation" class="w-full max-w-[300px] h-auto block">
                         </div>
-                        <div class="col-md-3 d-none d-md-block" data-aos="fade-up" data-aos-delay="400">
-                            <div class="polaroid polaroid-3">
-                                <div class="tape"></div>
-                                <img src="{{ asset('images/seed_storage.jpeg') }}" alt="Rice Field">
-                            </div>
+                    </div>
+                    <div class="w-1/4 px-4" data-aos="fade-up" data-aos-delay="400">
+                        <div class="polaroid polaroid-3 bg-white p-4 pb-12 shadow-2xl relative inline-block transition-transform duration-300">
+                            <div class="absolute -top-4 left-1/2 -translate-x-1/2 -rotate-3 w-32 h-9 bg-white/50 backdrop-blur-[5px] border border-white/30 shadow-sm"></div>
+                            <img src="{{ asset('images/seed_storage.jpeg') }}" alt="Rice Field" class="w-full max-w-[300px] h-auto block">
                         </div>
                     </div>
                 </div>
@@ -365,33 +73,32 @@
     </section>
 
     <!-- Tentang Kami Section -->
-    <section class="py-5 bg-white">
-        <div class="container py-5">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">Tentang Kami</h2>
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6 relative inline-block">
+                    Tentang Kami
+                    <span class="absolute bottom-[-10px] left-1/2 -translate-x-1/2 w-1/2 h-1 bg-[#16a34a] rounded-sm"></span>
+                </h2>
             </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-10 text-center" data-aos="fade-up" data-aos-delay="100">
-                    <p class="about-text mb-5">
-                        BBRMP Sumatera Selatan melayani Pengelolaan Produk Instrumen Hasil Standardisasi yang dikelola oleh
-                        Unit Pengelola Benih Sumber (UPBS) BBRMP Sumsel. Produk yang tersedia pada saat ini adalah benih
-                        padi. Layanan Benih/Bibit Sumber Spesifik Lokasi yang dikelola oleh Unit Pengelola Benih Sumber
-                        (UPBS) BBRMP Sumsel dapat melalui dua cara yakni melalui bantuan dan melalui pembelian.
-                    </p>
+            
+            <div class="max-w-5xl mx-auto text-center" data-aos="fade-up" data-aos-delay="100">
+                <p class="text-lg text-slate-600 leading-relaxed mb-12">
+                    BBRMP Sumatera Selatan melayani Pengelolaan Produk Instrumen Hasil Standardisasi yang dikelola oleh
+                    Unit Pengelola Benih Sumber (UPBS) BBRMP Sumatera Selatan. Produk yang tersedia pada saat ini adalah benih
+                    padi. Layanan Benih/Bibit Sumber Spesifik Lokasi yang dikelola oleh Unit Pengelola Benih Sumber
+                    (UPBS) BBRMP Sumatera Selatan dapat melalui dua cara yakni melalui bantuan dan melalui pembelian.
+                </p>
 
-                    <div class="row g-2 mt-4" data-aos="zoom-in" data-aos-delay="200">
-                        <div class="col-4">
-                            <img src="{{ asset('images/beras_3.jpeg') }}" alt="Drying Rice 1"
-                                class="img-fluid rounded shadow-sm" style="height: 250px; object-fit: cover; width: 100%;">
-                        </div>
-                        <div class="col-4">
-                            <img src="{{ asset('images/beras_4.jpeg') }}" alt="Drying Rice 2"
-                                class="img-fluid rounded shadow-sm" style="height: 250px; object-fit: cover; width: 100%;">
-                        </div>
-                        <div class="col-4">
-                            <img src="{{ asset('images/seed_storage2.jpeg') }}" alt="Drying Rice 3"
-                                class="img-fluid rounded shadow-sm" style="height: 250px; object-fit: cover; width: 100%;">
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8" data-aos="zoom-in" data-aos-delay="200">
+                    <div>
+                        <img src="{{ asset('images/beras_3.jpeg') }}" alt="Drying Rice 1" class="w-full h-[250px] object-cover rounded-xl shadow-md">
+                    </div>
+                    <div>
+                        <img src="{{ asset('images/beras_4.jpeg') }}" alt="Drying Rice 2" class="w-full h-[250px] object-cover rounded-xl shadow-md">
+                    </div>
+                    <div>
+                        <img src="{{ asset('images/seed_storage2.jpeg') }}" alt="Drying Rice 3" class="w-full h-[250px] object-cover rounded-xl shadow-md">
                     </div>
                 </div>
             </div>
@@ -399,50 +106,65 @@
     </section>
 
     <!-- Persyaratan Layanan Section -->
-    <section class="py-5 bg-white">
-        <div class="container py-5">
-            <div class="row">
-                <div class="col-lg-12" data-aos="fade-up">
-                    <h2 class="fw-bold fs-2 mb-4" style="color: #111827;">Persyaratan Layanan</h2>
-                    <ul class="list-unstyled requirements-list ps-3">
-                        <li>Mengisi identitas sesuai kartu identitas yang dimiliki dan maksud kedatangan melalui form</li>
-                        <li>Mengisi form permohonan layanan dengan melampirkan KTP/Kartu Anggota dan lainnya yang masih
-                            berlaku</li>
-                        <li>Mengisi Survei Kepuasan Pelanggan setelah mendapatkan layanan</li>
-                        <li>Permintaan bantuan benih sumber VUB dapat diberikan dengan ketentuan sebagai berikut:
-                            <ol class="mt-2 text-muted" type="a">
+    <section class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl p-8 md:p-12 shadow-sm border border-slate-100" data-aos="fade-up">
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mb-8 flex items-center">
+                    <i class="bi bi-card-checklist text-[#16a34a] mr-4 text-3xl"></i> Persyaratan Layanan
+                </h2>
+                <ul class="space-y-4 text-lg text-slate-600 pl-2 md:pl-4">
+                    <li class="flex items-start">
+                        <i class="bi bi-check-circle-fill text-[#16a34a] mt-1 mr-4 shrink-0"></i>
+                        <span>Mengisi identitas sesuai kartu identitas yang dimiliki dan maksud kedatangan melalui form</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="bi bi-check-circle-fill text-[#16a34a] mt-1 mr-4 shrink-0"></i>
+                        <span>Mengisi form permohonan layanan dengan melampirkan KTP/Kartu Anggota dan lainnya yang masih berlaku</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="bi bi-check-circle-fill text-[#16a34a] mt-1 mr-4 shrink-0"></i>
+                        <span>Mengisi Survei Kepuasan Pelanggan setelah mendapatkan layanan</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="bi bi-check-circle-fill text-[#16a34a] mt-1 mr-4 shrink-0"></i>
+                        <div>
+                            <span>Permintaan bantuan benih sumber VUB dapat diberikan dengan ketentuan sebagai berikut:</span>
+                            <ol class="list-[lower-alpha] pl-6 mt-3 space-y-2 text-slate-500">
                                 <li>Apabila target PNBP sudah dipenuhi,</li>
                                 <li>Benih digunakan untuk kegiatan display atau sosialisasi yang dilakukan oleh dinas,</li>
-                                <li>Bantuan diberikan pada kondisi tertentu, diantaranya terjadi bencana alam, kekeringan,
-                                    kebanjiran atau hal-hal lain perlu untuk diberikan bantuan benih,</li>
-                                <li>Pemberian bantuan benih di atas dengan tetap mempertimbangkan ketersediaan stok benih di
-                                    gudang UPBS.</li>
+                                <li>Bantuan diberikan pada kondisi tertentu, diantaranya terjadi bencana alam, kekeringan, kebanjiran atau hal-hal lain perlu untuk diberikan bantuan benih,</li>
+                                <li>Pemberian bantuan benih di atas dengan tetap mempertimbangkan ketersediaan stok benih di gudang UPBS.</li>
                             </ol>
-                        </li>
-                    </ul>
-                </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </section>
 
     <!-- Varietas Benih Padi Section -->
-    <section class="py-5" style="background-color: #f8fafc;">
-        <div class="container py-5">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">Varietas Benih Padi</h2>
-                <p class="lead text-muted mx-auto" style="max-width: 800px;">
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6 relative inline-block">
+                    Varietas Benih Padi
+                    <span class="absolute bottom-[-10px] left-1/2 -translate-x-1/2 w-1/2 h-1 bg-[#16a34a] rounded-sm"></span>
+                </h2>
+                <p class="text-lg text-slate-500 max-w-3xl mx-auto mt-6">
                     Varietas benih padi unggul yang tersedia di UPBS Sumatera Selatan untuk mendukung peningkatan produksi
                     dan kualitas pertanian
                 </p>
             </div>
 
-            <div class="row g-4 text-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
                 @foreach ($varieties as $variety)
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="{{ $loop->iteration * 100 }}">
-                    <div class="variety-card h-100">
-                        <div class="step-circle">{{ $loop->iteration }}</div>
-                        <h4 class="fw-bold mb-3 fs-5">{{ $variety->name }}</h4>
-                        <p class="text-muted small">{{ $variety->description }}</p>
+                <div data-aos="fade-up" data-aos-delay="{{ $loop->iteration * 100 }}">
+                    <div class="bg-white border border-slate-100 rounded-2xl p-8 h-full transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(0,0,0,0.05)] hover:border-green-200 group">
+                        <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center text-3xl font-bold text-[#16a34a] mx-auto mb-6 shadow-sm group-hover:bg-green-100 transition-colors">
+                            {{ $loop->iteration }}
+                        </div>
+                        <h4 class="font-bold text-xl mb-3 text-slate-800">{{ $variety->name }}</h4>
+                        <p class="text-sm text-slate-500">{{ $variety->description }}</p>
                     </div>
                 </div>
                 @endforeach
@@ -453,13 +175,11 @@
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({
-            once: true,
-            duration: 800
-        });
+        AOS.init({ once: true, duration: 800 });
 
         document.addEventListener('DOMContentLoaded', function() {
             const popup = document.getElementById('welcomePopup');
+            const popupContent = popup.querySelector('.popup-content');
             const closeBtn = document.getElementById('closePopupBtn');
 
             // Show popup with a slight delay
@@ -467,12 +187,14 @@
                 popup.style.display = 'flex';
                 // Trigger reflow
                 void popup.offsetWidth;
-                popup.classList.add('show');
+                popup.classList.remove('opacity-0');
+                popupContent.classList.remove('translate-y-5');
             }, 500);
 
             // Close popup function
             const closePopup = () => {
-                popup.classList.remove('show');
+                popup.classList.add('opacity-0');
+                popupContent.classList.add('translate-y-5');
                 setTimeout(() => {
                     popup.style.display = 'none';
                 }, 400); // match transition duration
@@ -491,65 +213,54 @@
 @endsection
 
 @section('footer')
-    <footer class="bg-dark text-white py-5 mt-auto" style="background-color: #111827 !important;">
-        <div class="container py-4">
-            <div class="row g-4">
-                <div class="col-lg-5 mb-4 mb-lg-0" data-aos="fade-up">
-                    <h5 class="text-green fw-bold mb-3 fs-4"><i class="bi bi-flower1"></i> UPBS Beras BBRMP SumSel</h5>
-                    <p class="text-secondary small pe-lg-4" style="line-height: 1.8;">
-                        Unit Pengelola Benih Sumber (UPBS) di bawah naungan Balai Penerapan Modernisasi Pertanian (BBRMP)
-                        Sumatera Selatan. Berkomitmen dalam menyediakan layanan benih padi varietas unggul demi meningkatkan
-                        produktivitas pertanian nasional.
+    <footer class="bg-slate-900 text-white pt-16 pb-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12">
+                <div class="lg:col-span-5" data-aos="fade-up">
+                    <h5 class="text-[#16a34a] font-bold text-xl mb-4 flex items-center">
+                        <i class="bi bi-flower1 mr-2"></i> UPBS BBRMP SumSel
+                    </h5>
+                    <p class="text-slate-400 text-sm leading-relaxed pr-4">
+                        Unit Pengelola Benih Sumber (UPBS) di bawah naungan Balai Penerapan Modernisasi Pertanian (BBRMP) Sumatera Selatan. Berkomitmen dalam menyediakan layanan benih padi varietas unggul demi meningkatkan produktivitas pertanian nasional.
                     </p>
                 </div>
-                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="100">
-                    <h5 class="text-white mb-4 fw-semibold fs-6">Tautan Cepat</h5>
-                    <ul class="list-unstyled text-secondary small">
-                        <li class="mb-3"><a href="{{ route('home') }}"
-                                class="text-secondary text-decoration-none hover-white transition">Beranda</a></li>
-                        <li class="mb-3"><a href="{{ route('dashboard') }}"
-                                class="text-secondary text-decoration-none hover-white transition">Dashboard</a></li>
-                        <li class="mb-3"><a href="{{ route('stok.index') }}"
-                                class="text-secondary text-decoration-none hover-white transition">Stok Benih</a></li>
-                        <li class="mb-3"><a href="{{ route('transactions.create') }}"
-                                class="text-secondary text-decoration-none hover-white transition">Pengajuan Layanan</a>
-                        </li>
+                <div class="lg:col-span-3 md:col-span-1" data-aos="fade-up" data-aos-delay="100">
+                    <h5 class="text-white font-semibold text-lg mb-6">Tautan Cepat</h5>
+                    <ul class="space-y-4 text-sm">
+                        <li><a href="{{ route('home') }}" class="text-slate-400 hover:text-white transition-colors">Beranda</a></li>
+                        <li><a href="{{ route('dashboard') }}" class="text-slate-400 hover:text-white transition-colors">Dashboard</a></li>
+                        <li><a href="{{ route('stok.index') }}" class="text-slate-400 hover:text-white transition-colors">Stok Benih</a></li>
+                        <li><a href="{{ route('transactions.create') }}" class="text-slate-400 hover:text-white transition-colors">Pengajuan Layanan</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <h5 class="text-white mb-4 fw-semibold fs-6">Hubungi Kami</h5>
-                    <ul class="list-unstyled text-secondary small">
-                        <li class="mb-3 d-flex">
-                            <i class="bi bi-geo-alt-fill text-green me-3 fs-5"></i>
-                            <span>Jl. Kol. H. Barlian No.KM. 6, Srijaya, Kec. Alang-Alang Lebar, Kota Palembang, Sumatera
-                                Selatan 30153</span>
+                <div class="lg:col-span-4 md:col-span-1" data-aos="fade-up" data-aos-delay="200">
+                    <h5 class="text-white font-semibold text-lg mb-6">Hubungi Kami</h5>
+                    <ul class="space-y-4 text-sm text-slate-400">
+                        <li class="flex items-start">
+                            <i class="bi bi-geo-alt-fill text-[#16a34a] mr-3 mt-1 text-lg"></i>
+                            <span>Jl. Kol. H. Barlian No.KM. 6, Srijaya, Kec. Alang-Alang Lebar, Kota Palembang, Sumatera Selatan 30153</span>
                         </li>
-                        <li class="mb-3 d-flex">
-                            <i class="bi bi-telephone-fill text-green me-3 fs-5"></i>
+                        <li class="flex items-center">
+                            <i class="bi bi-telephone-fill text-[#16a34a] mr-3 text-lg"></i>
                             <span>(0711) 411317</span>
                         </li>
-                        <li class="mb-3 d-flex">
-                            <i class="bi bi-envelope-fill text-green me-3 fs-5"></i>
+                        <li class="flex items-center">
+                            <i class="bi bi-envelope-fill text-[#16a34a] mr-3 text-lg"></i>
                             <span>BBRMP.sumsel@pertanian.go.id</span>
                         </li>
                     </ul>
                 </div>
             </div>
-            <hr class="border-secondary my-4" style="opacity: 0.2;">
-            <div class="row align-items-center" data-aos="fade-up" data-aos-delay="300">
-                <div class="col-md-6 text-center text-md-start text-secondary small">
-                    &copy; {{ date('Y') }} Sistem Informasi Manajemen Benih Padi
+            
+            <div class="border-t border-slate-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center" data-aos="fade-up" data-aos-delay="300">
+                <div class="text-slate-500 text-sm text-center md:text-left mb-4 md:mb-0">
+                    &copy; {{ date('Y') }} Sistem Informasi Manajemen Benih Padi<br class="md:hidden"> UPBS BBRMP SumSel. All Rights Reserved.
                 </div>
-                <div
-                    class="col-md-6 text-center text-md-end mt-3 mt-md-0 d-flex justify-content-center justify-content-md-end gap-3">
-                    <a href="#" class="text-secondary transition hover-white"><i
-                            class="bi bi-facebook fs-4"></i></a>
-                    <a href="#" class="text-secondary transition hover-white"><i
-                            class="bi bi-twitter fs-4"></i></a>
-                    <a href="#" class="text-secondary transition hover-white"><i
-                            class="bi bi-instagram fs-4"></i></a>
-                    <a href="#" class="text-secondary transition hover-white"><i
-                            class="bi bi-youtube fs-4"></i></a>
+                <div class="flex space-x-6">
+                    <a href="https://www.facebook.com/people/BBRMP-Sumatera-Selatan/100064902301689/" class="text-slate-500 hover:text-white transition-colors"><i class="bi bi-facebook text-xl"></i></a>
+                    <a href="https://x.com/BSIP_SUMSEL2109" class="text-slate-500 hover:text-white transition-colors"><i class="bi bi-twitter-x text-xl"></i></a>
+                    <a href="https://www.instagram.com/brmpsumsel/" class="text-slate-500 hover:text-white transition-colors"><i class="bi bi-instagram text-xl"></i></a>
+                    <a href="https://www.youtube.com/@BBRMPSumsel" class="text-slate-500 hover:text-white transition-colors"><i class="bi bi-youtube text-xl"></i></a>
                 </div>
             </div>
         </div>

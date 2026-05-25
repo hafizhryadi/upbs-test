@@ -68,14 +68,21 @@
         </div>
         
         <div class="flex flex-col sm:flex-row items-center gap-4 w-full xl:w-auto">
-            <div class="flex items-center gap-2 w-full sm:w-auto bg-slate-100 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#10b981]">
-                <span class="text-[13px] font-bold text-slate-700 whitespace-nowrap">Dari:</span>
-                <input type="text" class="bg-transparent border-none text-slate-800 text-[13px] w-full sm:w-[100px] py-2 transition-all outline-none font-medium placeholder-slate-400" placeholder="hh/bb/tttt">
-            </div>
-            <div class="flex items-center gap-2 w-full sm:w-auto bg-slate-100 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#10b981]">
-                <span class="text-[13px] font-bold text-slate-700 whitespace-nowrap">Sampai:</span>
-                <input type="text" class="bg-transparent border-none text-slate-800 text-[13px] w-full sm:w-[100px] py-2 transition-all outline-none font-medium placeholder-slate-400" placeholder="hh/bb/tttt">
-            </div>
+            <form method="GET" action="{{ route('transactions.index') }}" class="flex flex-col sm:flex-row items-center gap-4 w-full">
+                <div class="flex items-center gap-2 w-full sm:w-auto bg-slate-100 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#10b981]">
+                    <span class="text-[13px] font-bold text-slate-700 whitespace-nowrap">Dari:</span>
+                    <input type="date" name="start_date" value="{{ request('start_date') }}" onchange="this.form.submit()" class="bg-transparent border-none text-slate-800 text-[13px] w-full sm:w-[130px] py-2 transition-all outline-none font-medium">
+                </div>
+                <div class="flex items-center gap-2 w-full sm:w-auto bg-slate-100 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#10b981]">
+                    <span class="text-[13px] font-bold text-slate-700 whitespace-nowrap">Sampai:</span>
+                    <input type="date" name="end_date" value="{{ request('end_date') }}" onchange="this.form.submit()" class="bg-transparent border-none text-slate-800 text-[13px] w-full sm:w-[130px] py-2 transition-all outline-none font-medium">
+                </div>
+                @if(request('start_date') || request('end_date'))
+                    <a href="{{ route('transactions.index') }}" class="text-[12px] font-bold text-red-500 hover:text-red-700 whitespace-nowrap ml-2">
+                        <i class="bi bi-x-circle mr-1"></i>Reset
+                    </a>
+                @endif
+            </form>
             <a href="{{ route('transactions.create') }}" class="w-full sm:w-auto bg-[#16a34a] hover:bg-[#15803d] text-white font-bold rounded-lg text-[13px] px-4 py-2.5 text-center transition-colors shadow-sm flex items-center justify-center whitespace-nowrap">
                 <i class="bi bi-plus text-lg mr-1"></i> Tambah Transaksi
             </a>
@@ -84,7 +91,7 @@
 
     <!-- Table -->
     <div class="overflow-x-auto">
-        <table class="w-full text-left text-slate-700">
+        <table class="w-full text-left text-slate-700 whitespace-nowrap min-w-[800px]">
             <thead class="text-[13px] text-slate-800 bg-white border-b border-slate-200">
                 <tr>
                     <th scope="col" class="px-6 py-4 font-bold w-16">No</th>

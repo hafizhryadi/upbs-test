@@ -77,7 +77,7 @@
     </div>
 
     <div style="margin-top: 20px;">
-        <div class="section-title">Riwayat Transaksi Keluar</div>
+        <div class="section-title">Riwayat Transaksi Keluar - Penjualan</div>
         <table>
             <thead>
                 <tr>
@@ -85,23 +85,51 @@
                     <th>Varietas</th>
                     <th class="text-right">Jumlah Keluar (kg)</th>
                     <th>Tanggal</th>
-                    <th>Kategori</th>
                     <th>Keterangan</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($transaksiKeluar as $trx)
+                @forelse($transactionsPenjualan as $trx)
                 <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $trx->variety->name ?? '-' }}</td>
                     <td class="text-right">{{ number_format($trx->quantity) }}</td>
                     <td>{{ \Carbon\Carbon::parse($trx->trx_date)->format('d M Y') }}</td>
-                    <td>{{ ucfirst($trx->category) }}</td>
                     <td>{{ $trx->note ?? '-' }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="text-center">Belum ada transaksi keluar tercatat di bulan ini.</td>
+                    <td colspan="5" class="text-center">Belum ada transaksi penjualan tercatat di bulan ini.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <div class="section-title">Riwayat Transaksi Keluar - Diseminasi</div>
+        <table>
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>Varietas</th>
+                    <th class="text-right">Jumlah Keluar (kg)</th>
+                    <th>Tanggal</th>
+                    <th>Keterangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($transactionsDiseminasi as $trx)
+                <tr>
+                    <td class="text-center">{{ $loop->iteration }}</td>
+                    <td>{{ $trx->variety->name ?? '-' }}</td>
+                    <td class="text-right">{{ number_format($trx->quantity) }}</td>
+                    <td>{{ \Carbon\Carbon::parse($trx->trx_date)->format('d M Y') }}</td>
+                    <td>{{ $trx->note ?? '-' }}</td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center">Belum ada transaksi diseminasi tercatat di bulan ini.</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -112,16 +140,20 @@
         <div class="section-title">Kesimpulan Laporan</div>
         <table style="width: 60%; margin: 0 auto; margin-top: 10px;">
             <tr>
-                <th style="text-align: left;">Total Benih Masuk</th>
+                <th style="text-align: left;">Stok Akhir Bulan Sebelumnya</th>
+                <td style="text-align: right; font-weight: bold;">{{ number_format($stokAkhirBulanLalu) }} kg</td>
+            </tr>
+            <tr>
+                <th style="text-align: left;">Total Benih Masuk Bulan Ini</th>
                 <td style="text-align: right; color: #16a34a; font-weight: bold;">{{ number_format($totalMasuk) }} kg</td>
             </tr>
             <tr>
-                <th style="text-align: left;">Total Benih Keluar</th>
+                <th style="text-align: left;">Total Benih Keluar Bulan Ini</th>
                 <td style="text-align: right; color: #ef4444; font-weight: bold;">{{ number_format($totalKeluar) }} kg</td>
             </tr>
             <tr>
-                <th style="text-align: left;">Selisih (Masuk - Keluar)</th>
-                <td style="text-align: right; font-weight: bold;">{{ number_format($totalMasuk - $totalKeluar) }} kg</td>
+                <th style="text-align: left;">Stok Akhir Bulan Ini</th>
+                <td style="text-align: right; font-weight: bold;">{{ number_format($stokAkhirBulanLalu + $totalMasuk - $totalKeluar) }} kg</td>
             </tr>
         </table>
     </div>
