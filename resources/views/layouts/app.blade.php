@@ -27,9 +27,12 @@
                     <a class="text-xl md:text-2xl font-bold tracking-tight" href="{{ route('home') }}">UPBS BBRMP</a>
                     <p class="text-xs text-white/70 mt-1 font-medium hidden md:block">Panel Admin</p>
                 </div>
-                <a href="{{ route('logout') }}" class="md:hidden flex items-center text-sm font-medium text-white/90 hover:text-white bg-white/10 hover:bg-red-500/80 px-3 py-1.5 rounded-md transition-all">
-                    <i class="bi bi-box-arrow-right mr-1.5"></i> Keluar
-                </a>
+                <form method="POST" action="{{ route('logout') }}" class="md:hidden">
+                    @csrf
+                    <button type="submit" class="flex items-center text-sm font-medium text-white/90 hover:text-white bg-white/10 hover:bg-red-500/80 px-3 py-1.5 rounded-md transition-all">
+                        <i class="bi bi-box-arrow-right mr-1.5"></i> Keluar
+                    </button>
+                </form>
             </div>
 
             <!-- Navigation -->
@@ -82,10 +85,12 @@
                     <p class="text-xs text-emerald-200/80">Administrator</p>
                 </div>
             </div>
-            <a href="{{ route('logout') }}"
-                class="flex items-center justify-center w-full px-4 py-2 mt-2 border border-emerald-600/50 rounded-lg text-sm transition-all hover:bg-white/10 text-emerald-50 hover:border-emerald-500">
-                <i class="bi bi-box-arrow-left mr-2"></i> Keluar
-            </a>
+            <form method="POST" action="{{ route('logout') }}" class="w-full mt-2">
+                @csrf
+                <button type="submit" class="flex items-center justify-center w-full px-4 py-2 border border-emerald-600/50 rounded-lg text-sm transition-all hover:bg-white/10 text-emerald-50 hover:border-emerald-500">
+                    <i class="bi bi-box-arrow-left mr-2"></i> Keluar
+                </button>
+            </form>
         </div>
     </aside>
 

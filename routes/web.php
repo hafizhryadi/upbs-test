@@ -7,7 +7,6 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\VarietyController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequestController;
-use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Variety;
 
@@ -17,10 +16,6 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/stok', [InventoryController::class, 'publicStok'])->name('stok.index');
-
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('request/success', function () {
     return view('requests.success');
