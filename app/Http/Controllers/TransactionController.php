@@ -79,7 +79,6 @@ class TransactionController extends Controller
                 'location_id' => $masukValidated['location_id'],
                 'batch_code' => $batchCode,
                 'expiry_date' => $masukValidated['expiry_date'],
-                'status' => 'ready',
                 'quantity' => $requestedQuantity,
             ]);
 

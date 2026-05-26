@@ -47,17 +47,7 @@
                                     <input type="date" class="form-control" id="expiry_date" name="expiry_date"
                                         value="{{ old('expiry_date', $inventory->expiry_date) }}" required>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="status" class="form-label">Status</label>
-                                    <select class="form-select" id="status" name="status" required>
-                                        <option value="ready"
-                                            {{ old('status', $inventory->status) == 'ready' ? 'selected' : '' }}>Ready (Siap
-                                            Jual)</option>
-                                        <option value="expired"
-                                            {{ old('status', $inventory->status) == 'expired' ? 'selected' : '' }}>Expired
-                                            (Kadaluarsa)</option>
-                                    </select>
-                                </div>
+
                                 <div class="alert alert-warning">
                                     <i class="bi bi-info-circle"></i> <strong>Perhatian:</strong> Mengubah jumlah stok di
                                     sini hanya disarankan untuk koreksi data awal (Opname). Untuk transaksi masuk/keluar
