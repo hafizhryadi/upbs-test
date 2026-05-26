@@ -51,7 +51,6 @@ erDiagram
         bigint id PK
         bigint variety_id FK
         bigint inventory_id FK
-        string batch_code
         date trx_date
         enum trx_type "masuk, keluar"
         enum category "penjualan, diseminasi"
@@ -124,17 +123,19 @@ Di bawah ini merupakan alur logika pengolahan data pada berbagai *Controller* ut
 ### **TransactionController (Logika Inti Pemrosesan Stok)**
 Kontroller ini mengatur *lifecycle* ketersediaan stok fisik benih menggunakan kaidah FEFO (First Expired First Out) secara spesifik berdasarkan *Batch/Lot*.
 
+*   **Validasi Terpusat (`required_if`)**:
+    *   Pada proses penambahan transaksi `store()`, aturan validasi disatukan di dalam satu blok Laravel Validation menggunakan fitur `required_if`. Hal ini memastikan atribut form seperti `variety_id`, `location_id`, dan `expiry_date` hanya diwajibkan bila tipenya "masuk". Sebaliknya, `inventory_id` dan `category` hanya aktif divalidasi apabila tipenya "keluar".
+    *   *Field* `batch_code` dirancang opsional (`nullable`), mengakomodasi jika operator gudang mengosongkannya, lalu sistem akan otomatis men-*generate* kodenya (misal: `BATCH-XXXXX`).
 *   **Pemrosesan Transaksi "Masuk" (In):**
-    *   Dalam fungsi `store()`, jika `trx_type == 'masuk'`, sistem secara otomatis akan *meng-generate* `batch_code` baru dengan prefix "BATCH-..." secara *random*.
-    *   Sistem kemudian melakukan dua proses eksekusi (*Insert*):
-        1. Membuat entitas stok/batch baru ke tabel `inventories` berdasarkan `variety_id` dan `expiry_date` yang diberikan.
-        2. Mencatatnya sebagai jejak masuk pada tabel `transactions`.
+    *   Sistem melakukan dua proses eksekusi (*Insert*):
+        1. Membuat entitas stok/batch baru ke tabel `inventories` berdasarkan data lokasi dan masa kedaluwarsa.
+        2. Mencatatnya sebagai rekam jejak masuk pada tabel `transactions`.
 *   **Pemrosesan Transaksi "Keluar" (Out):**
-    *   Sistem tidak langsung memotong agregat stok varietas. Saat *form* keluar dibuat, admin akan diberikan daftar *Batch/Lot* (`inventories`) yang spesifik (hanya yang memiliki stok > 0).
-    *   Sistem memvalidasi stok. Jika kuantitas keluaran melebihi sisa di *batch* tersebut, transaksi **ditolak**.
-    *   Bila valid, maka nilai `quantity` pada tabel `inventories` (di *batch* tersebut) akan dipotong (`decrement()`), dan jejak mutasi disimpan ke tabel `transactions`.
+    *   Saat *form* keluar dibuat, admin disajikan daftar *Batch/Lot* (`inventories`) yang spesifik (hanya yang memiliki stok > 0).
+    *   Sistem memvalidasi sisa stok. Jika kuantitas yang dikeluarkan melebihi *batch* tersebut, sistem menolak eksekusinya (mencegah *negative stock*).
+    *   Bila valid, maka saldo di tabel `inventories` dipotong (`decrement()`), dan mutasi logistik tersebut disimpan permanen di tabel `transactions` (beserta penyalinan relasi otomatis `variety_id` dari objek *batch*).
 *   **Pemrosesan Koreksi (Update/Destroy):**
-    *   Memiliki mekanisme "Undo/Reversi Stok". Jika sebuah log transaksi diubah atau dihapus, sistem akan secara cerdas mengembalikan saldo inventori (`increment()` atau `decrement()`) pada *batch* yang bersangkutan guna memastikan akurasi data tak terganggu.
+    *   Terdapat mekanisme "Undo/Reversi Stok". Jika histori log transaksi keluar/masuk diedit atau dihapus secara sengaja, maka saldo pada tabel `inventories` terkait akan disesuaikan atau dikembalikan secara matematis (`increment` / `decrement`) untuk menjaga presisi keseimbangan data.
 
 ### **InventoryController**
 Bertanggung jawab atas pemantauan visibilitas data stok.

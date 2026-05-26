@@ -57,34 +57,31 @@ class TransactionController extends Controller
             'trx_date' => 'required|date',
             'quantity' => 'required|integer|min:1',
             'note' => 'nullable|string',
+            'variety_id' => 'required_if:trx_type,masuk|nullable|exists:varieties,id',
+            'location_id' => 'required_if:trx_type,masuk|nullable|exists:locations,id',
+            'batch_code' => 'nullable|string|max:255',
+            'expiry_date' => 'required_if:trx_type,masuk|nullable|date',
+            'inventory_id' => 'required_if:trx_type,keluar|nullable|exists:inventories,id',
+            'category' => 'required_if:trx_type,keluar|nullable|in:penjualan,diseminasi',
         ]);
 
         $requestedQuantity = $validated['quantity'];
 
         if ($validated['trx_type'] == 'masuk') {
-            $masukValidated = $request->validate([
-                'variety_id' => 'required|exists:varieties,id',
-                'location_id' => 'required|exists:locations,id',
-                'batch_code' => 'string|max:255',
-                'expiry_date' => 'required|date',
-            ]);
-
-            $varietyId = $masukValidated['variety_id'];
-
-            $batchCode = $masukValidated['batch_code'] ?? 'BATCH-' . strtoupper(\Illuminate\Support\Str::random(8));
+            $batchCode = $validated['batch_code'] ?? 'BATCH-' . strtoupper(\Illuminate\Support\Str::random(8));
 
             // Create Inventory
             $inventory = Inventory::create([
-                'variety_id' => $varietyId,
-                'location_id' => $masukValidated['location_id'],
+                'variety_id' => $validated['variety_id'],
+                'location_id' => $validated['location_id'],
                 'batch_code' => $batchCode,
-                'expiry_date' => $masukValidated['expiry_date'],
+                'expiry_date' => $validated['expiry_date'],
                 'quantity' => $requestedQuantity,
             ]);
 
             // Create Transaction
             Transaction::create([
-                'variety_id' => $varietyId,
+                'variety_id' => $validated['variety_id'],
                 'inventory_id' => $inventory->id,
                 'trx_date' => $validated['trx_date'],
                 'trx_type' => 'masuk',
@@ -94,13 +91,8 @@ class TransactionController extends Controller
             ]);
 
             return redirect()->route('transactions.index')->with('success', 'Transaksi masuk berhasil dicatat dan stok ditambahkan.');
-        } else {
-            $keluarValidated = $request->validate([
-                'inventory_id' => 'required|exists:inventories,id',
-                'category' => 'required|in:penjualan,diseminasi',
-            ]);
-
-            $inventory = Inventory::findOrFail($keluarValidated['inventory_id']);
+        } else if ($validated['trx_type'] == 'keluar') {
+            $inventory = Inventory::findOrFail($validated['inventory_id']);
 
             if ($inventory->quantity < $requestedQuantity) {
                 return back()->withErrors(['quantity' => 'Stok tidak mencukupi di Batch/Lot ini. Total sisa stok: ' . $inventory->quantity . ' kg'])->withInput();
@@ -115,7 +107,7 @@ class TransactionController extends Controller
                 'inventory_id' => $inventory->id,
                 'trx_date' => $validated['trx_date'],
                 'trx_type' => 'keluar',
-                'category' => $keluarValidated['category'],
+                'category' => $validated['category'],
                 'quantity' => $requestedQuantity,
                 'note' => $validated['note'],
             ]);
