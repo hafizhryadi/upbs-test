@@ -5,7 +5,7 @@
 @section('content')
     <div class="mb-8">
         <h2 class="text-[28px] font-bold text-slate-800 tracking-tight leading-tight">Manajemen Inventori</h2>
-        <p class="text-slate-600 mt-1 text-base">Pantau ketersediaan stok benih (Read-Only)</p>
+        <p class="text-slate-600 mt-1 text-base">Pantau ketersediaan stok benih</p>
     </div>
 
     <div class="bg-white rounded-[16px] border border-slate-200 shadow-sm overflow-hidden">
@@ -42,6 +42,7 @@
                         <th scope="col" class="px-6 py-4 font-bold text-center">Masa Edar</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Status</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Jumlah (kg)</th>
+                        <th scope="col" class="px-6 py-4 font-bold text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -85,6 +86,11 @@
                             </td>
                             <td class="px-6 py-4 text-center font-bold text-[14px]">
                                 {{ number_format($inventory->quantity) }}
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <a href="{{ route('inventories.edit', $inventory->id) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 transition-colors" title="Edit Data">
+                                    <i class="bi bi-pencil-square text-[14px]"></i>
+                                </a>
                             </td>
                         </tr>
                     @empty

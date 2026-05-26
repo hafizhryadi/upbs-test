@@ -62,7 +62,7 @@ class TransactionController extends Controller
             'batch_code' => 'nullable|string|max:255',
             'expiry_date' => 'required_if:trx_type,masuk|nullable|date',
             'inventory_id' => 'required_if:trx_type,keluar|nullable|exists:inventories,id',
-            'category' => 'required_if:trx_type,keluar|nullable|in:penjualan,diseminasi',
+            'category' => 'required_if:trx_type,keluar|nullable|in:penjualan,diseminasi,penyesuaian',
         ]);
 
         $requestedQuantity = $validated['quantity'];

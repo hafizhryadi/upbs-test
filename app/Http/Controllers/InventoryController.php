@@ -86,15 +86,9 @@ class InventoryController extends Controller
             'variety_id' => 'required|exists:varieties,id',
             'location_id' => 'required|exists:locations,id',
             'expiry_date' => 'required|date',
-            'quantity' => 'required|integer|min:0',
         ]);
         
         $inventory = Inventory::findOrFail($id);
-        
-        if ($validated['quantity'] == 0) {
-            $inventory->delete();
-            return redirect()->route('inventories.index')->with('success', 'Inventory otomatis terhapus karena kuantitas diubah menjadi 0.');
-        }
 
         $inventory->update($validated);
         return redirect()->route('inventories.index')->with('success', 'Inventory updated successfully.');

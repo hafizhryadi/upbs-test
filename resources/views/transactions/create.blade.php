@@ -108,6 +108,7 @@
                     <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] focus:border-[#10b981] px-4 py-2.5 transition-all outline-none font-medium" id="category" name="category">
                         <option value="penjualan" {{ old('category') == 'penjualan' ? 'selected' : '' }}>Penjualan</option>
                         <option value="diseminasi" {{ old('category') == 'diseminasi' ? 'selected' : '' }}>Diseminasi</option>
+                        <option value="penyesuaian" {{ old('category') == 'penyesuaian' ? 'selected' : '' }}>Penyesuaian Stok (Rusak / Selisih)</option>
                     </select>
                 </div>
             </div>

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('inventory_id')->nullable();
             $table->date('trx_date')->now();
             $table->enum('trx_type', ['masuk', 'keluar'])->default('keluar');
-            $table->enum('category', ['penjualan', 'diseminasi'])->nullable();
+            $table->enum('category', ['penjualan', 'diseminasi', 'penyesuaian'])->nullable();
             $table->integer('quantity');
             $table->text('note')->nullable();
             $table->timestamps();
