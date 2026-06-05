@@ -15,7 +15,7 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        $inventories = Inventory::with(['variety', 'location'])->get();
+        $inventories = Inventory::with(['variety', 'location'])->latest()->get();
         return view('inventories.index', compact('inventories'));
     }
 
