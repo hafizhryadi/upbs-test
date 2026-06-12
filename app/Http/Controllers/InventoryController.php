@@ -25,6 +25,7 @@ class InventoryController extends Controller
     public function publicStok()
     {
         $stocks = Inventory::selectRaw('variety_id, expiry_date, SUM(quantity) as total_quantity')
+            ->where('expiry_date', '>=', now()->toDateString())
             ->with('variety')
             ->groupBy('variety_id', 'expiry_date')
             ->orderBy('expiry_date', 'asc')

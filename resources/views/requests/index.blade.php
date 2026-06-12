@@ -84,7 +84,7 @@
                             <td class="px-6 py-4">
                                 <span
                                     class="inline-block px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">
-                                    {{ $request->benih }}
+                                    {{ $request->variety->name ?? '-' }}
                                 </span>
                                 <div class="text-[13px] font-bold text-slate-700 mt-1.5">
                                     {{ number_format($request->jumlah) }} kg</div>

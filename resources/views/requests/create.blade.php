@@ -62,11 +62,11 @@
                                 </h5>
                             </div>
                             <div>
-                                <label for="benih" class="block font-semibold text-slate-600 mb-2">Varietas Benih yang Diminta</label>
-                                <select class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:border-green-600 focus:ring-2 focus:ring-green-200 transition-all outline-none" id="benih" name="benih" required>
+                                <label for="variety_id" class="block font-semibold text-slate-600 mb-2">Varietas Benih yang Diminta</label>
+                                <select class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:border-green-600 focus:ring-2 focus:ring-green-200 transition-all outline-none" id="variety_id" name="variety_id" required>
                                     <option value="" disabled selected>Pilih Varietas Benih</option>
                                     @foreach ($varieties as $variety)
-                                        <option value="{{ $variety->name }}" {{ old('benih') == $variety->name ? 'selected' : '' }}>{{ $variety->name }}</option>
+                                        <option value="{{ $variety->id }}" {{ old('variety_id') == $variety->id ? 'selected' : '' }}>{{ $variety->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

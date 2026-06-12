@@ -13,7 +13,7 @@ class RequestController extends Controller
      */
     public function index()
     {
-        $requests = RequestModel::latest()->paginate(10);
+        $requests = RequestModel::with('variety')->latest()->paginate(10);
         return view('requests.index', compact('requests'));
     }
 
@@ -36,7 +36,7 @@ class RequestController extends Controller
             'phone' => 'required|string|max:20',
             'email' => 'nullable|email|max:255',
             'alamat' => 'required|string',
-            'benih' => 'required|string|max:255',
+            'variety_id' => 'required|exists:varieties,id',
             'jumlah' => 'required|integer|min:1',
             'jenis' => 'required|in:pembelian,diseminasi',
             'surat_permohonan' => 'required_if:jenis,diseminasi|file|mimes:pdf,jpg,jpeg,png|max:5120',

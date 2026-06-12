@@ -7,4 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Request extends Model
 {
     protected $guarded = [];
+
+    public function variety()
+    {
+        return $this->belongsTo(Variety::class);
+    }
 }

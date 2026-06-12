@@ -12,4 +12,9 @@ class Variety extends Model
     {
         return $this->hasMany(Inventory::class);
     }
+
+    public function requests()
+    {
+        return $this->hasMany(Request::class);
+    }
 }
