@@ -2,6 +2,24 @@
 
 @section('title', 'Manajemen Inventori')
 
+@php
+function sortIcon($column) {
+    $sortBy = request('sort_by');
+    $order = request('order', 'asc');
+    if ($sortBy === $column) {
+        return $order === 'asc' ? '<i class="bi bi-chevron-up text-[10px] ml-1"></i>' : '<i class="bi bi-chevron-down text-[10px] ml-1"></i>';
+    }
+    return '<i class="bi bi-chevron-expand text-[10px] ml-1 text-slate-400"></i>';
+}
+
+function sortUrl($column) {
+    $sortBy = request('sort_by');
+    $order = request('order', 'asc');
+    $newOrder = ($sortBy === $column && $order === 'asc') ? 'desc' : 'asc';
+    return request()->fullUrlWithQuery(['sort_by' => $column, 'order' => $newOrder]);
+}
+@endphp
+
 @section('content')
     <div class="mb-8">
         <h2 class="text-[28px] font-bold text-slate-800 tracking-tight leading-tight">Manajemen Inventori</h2>
@@ -18,16 +36,34 @@
                 <h3 class="text-[20px] font-bold text-[#10b981]">Stok Benih Padi</h3>
             </div>
 
-            <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+            <form method="GET" action="{{ route('inventories.index') }}" class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                @if(request('sort_by'))
+                    <input type="hidden" name="sort_by" value="{{ request('sort_by') }}">
+                @endif
+                @if(request('order'))
+                    <input type="hidden" name="order" value="{{ request('order') }}">
+                @endif
+                
+                <select name="status" onchange="this.form.submit()" class="bg-slate-100 border-none text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] px-4 py-2.5 outline-none font-medium transition-all cursor-pointer">
+                    <option value="">Stok Tersedia</option>
+                    <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>Semua</option>
+                    <option value="safe" {{ request('status') == 'safe' ? 'selected' : '' }}>Aman</option>
+                    <option value="warning" {{ request('status') == 'warning' ? 'selected' : '' }}>Mendekati Kadaluarsa</option>
+                    <option value="expired" {{ request('status') == 'expired' ? 'selected' : '' }}>Kadaluarsa</option>
+                    <option value="empty" {{ request('status') == 'empty' ? 'selected' : '' }}>Stok Habis</option>
+                </select>
+
                 <div class="relative w-full sm:w-[320px]">
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                         <i class="bi bi-search text-slate-400"></i>
                     </div>
-                    <input type="text"
+                    <input type="text" name="search" value="{{ request('search') }}"
                         class="bg-slate-100 border-none text-slate-800 text-[14px] rounded-lg focus:ring-2 focus:ring-[#10b981] w-full pl-10 px-4 py-2.5 transition-all outline-none font-medium placeholder-slate-400"
                         placeholder="Cari varietas atau kode batch">
                 </div>
-            </div>
+                <!-- Optional submit button for search if user presses enter it will submit anyway, but good for mobile -->
+                <button type="submit" class="hidden">Cari</button>
+            </form>
         </div>
 
         <!-- Table -->
@@ -36,12 +72,22 @@
                 <thead class="text-[13px] text-slate-800 bg-white border-b border-slate-200">
                     <tr>
                         <th scope="col" class="px-6 py-4 font-bold w-12">No</th>
-                        <th scope="col" class="px-6 py-4 font-bold">Varietas</th>
-                        <th scope="col" class="px-6 py-4 font-bold">Lokasi Gudang</th>
-                        <th scope="col" class="px-6 py-4 font-bold text-center">Kode Batch</th>
-                        <th scope="col" class="px-6 py-4 font-bold text-center">Masa Edar</th>
+                        <th scope="col" class="px-6 py-4 font-bold">
+                            <a href="{{ sortUrl('variety') }}" class="inline-flex items-center hover:text-[#10b981] transition-colors">Varietas {!! sortIcon('variety') !!}</a>
+                        </th>
+                        <th scope="col" class="px-6 py-4 font-bold">
+                            <a href="{{ sortUrl('location') }}" class="inline-flex items-center hover:text-[#10b981] transition-colors">Lokasi Gudang {!! sortIcon('location') !!}</a>
+                        </th>
+                        <th scope="col" class="px-6 py-4 font-bold text-center">
+                            <a href="{{ sortUrl('batch_code') }}" class="inline-flex items-center justify-center w-full hover:text-[#10b981] transition-colors">Kode Batch {!! sortIcon('batch_code') !!}</a>
+                        </th>
+                        <th scope="col" class="px-6 py-4 font-bold text-center">
+                            <a href="{{ sortUrl('expiry_date') }}" class="inline-flex items-center justify-center w-full hover:text-[#10b981] transition-colors">Masa Edar {!! sortIcon('expiry_date') !!}</a>
+                        </th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Status</th>
-                        <th scope="col" class="px-6 py-4 font-bold text-center">Jumlah (kg)</th>
+                        <th scope="col" class="px-6 py-4 font-bold text-center">
+                            <a href="{{ sortUrl('quantity') }}" class="inline-flex items-center justify-center w-full hover:text-[#10b981] transition-colors">Jumlah (kg) {!! sortIcon('quantity') !!}</a>
+                        </th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Aksi</th>
                     </tr>
                 </thead>

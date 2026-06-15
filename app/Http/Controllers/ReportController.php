@@ -20,17 +20,17 @@ class ReportController extends Controller
             $date = Carbon::create($year, $m, 1);
             
             // Get stats for this month
-            $totalIn = \App\Models\Transaction::where('trx_type', 'masuk')
+            $totalIn = Transaction::where('trx_type', 'masuk')
                 ->whereYear('trx_date', $year)
                 ->whereMonth('trx_date', $m)
                 ->sum('quantity');
                 
-            $totalOut = \App\Models\Transaction::where('trx_type', 'keluar')
+            $totalOut = Transaction::where('trx_type', 'keluar')
                 ->whereYear('trx_date', $year)
                 ->whereMonth('trx_date', $m)
                 ->sum('quantity');
                 
-            $trxCount = \App\Models\Transaction::whereYear('trx_date', $year)
+            $trxCount = Transaction::whereYear('trx_date', $year)
                 ->whereMonth('trx_date', $m)
                 ->count();
                 

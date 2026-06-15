@@ -10,7 +10,7 @@ class Transaction extends Model
 
     public function variety()
     {
-        return $this->belongsTo(Variety::class);
+        return $this->belongsTo(Variety::class)->withTrashed();
     }
 
     public function inventory()
