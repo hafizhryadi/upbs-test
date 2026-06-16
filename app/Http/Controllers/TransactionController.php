@@ -7,6 +7,7 @@ use App\Models\Transaction;
 use App\Models\Inventory;
 use App\Models\Variety;
 use App\Models\Location;
+use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
@@ -67,144 +68,104 @@ class TransactionController extends Controller
 
         $requestedQuantity = $validated['quantity'];
 
-        if ($validated['trx_type'] == 'masuk') {
-            $batchCode = $validated['batch_code'] ?? 'BATCH-' . strtoupper(\Illuminate\Support\Str::random(8));
+        try {
+            DB::transaction(function () use ($validated, $requestedQuantity) {
+                if ($validated['trx_type'] == 'masuk') {
+                    $batchCode = $validated['batch_code'] ?? 'BATCH-' . strtoupper(\Illuminate\Support\Str::random(8));
 
-            // Create Inventory
-            $inventory = Inventory::create([
-                'variety_id' => $validated['variety_id'],
-                'location_id' => $validated['location_id'],
-                'batch_code' => $batchCode,
-                'expiry_date' => $validated['expiry_date'],
-                'quantity' => $requestedQuantity,
-            ]);
+                    // Create Inventory
+                    $inventory = Inventory::create([
+                        'variety_id' => $validated['variety_id'],
+                        'location_id' => $validated['location_id'],
+                        'batch_code' => $batchCode,
+                        'expiry_date' => $validated['expiry_date'],
+                        'quantity' => $requestedQuantity,
+                    ]);
 
-            // Create Transaction
-            Transaction::create([
-                'variety_id' => $validated['variety_id'],
-                'inventory_id' => $inventory->id,
-                'trx_date' => $validated['trx_date'],
-                'trx_type' => 'masuk',
-                'category' => null,
-                'quantity' => $requestedQuantity,
-                'note' => $validated['note'],
-            ]);
+                    // Create Transaction
+                    Transaction::create([
+                        'variety_id' => $validated['variety_id'],
+                        'inventory_id' => $inventory->id,
+                        'trx_date' => $validated['trx_date'],
+                        'trx_type' => 'masuk',
+                        'category' => null,
+                        'quantity' => $requestedQuantity,
+                        'note' => $validated['note'],
+                    ]);
+                } else if ($validated['trx_type'] == 'keluar') {
+                    // Lock the row for update to prevent race conditions
+                    $inventory = Inventory::where('id', $validated['inventory_id'])->lockForUpdate()->firstOrFail();
 
-            return redirect()->route('transactions.index')->with('success', 'Transaksi masuk berhasil dicatat dan stok ditambahkan.');
-        } else if ($validated['trx_type'] == 'keluar') {
-            $inventory = Inventory::findOrFail($validated['inventory_id']);
+                    if ($inventory->quantity < $requestedQuantity) {
+                        throw new \Exception('Stok tidak mencukupi di Batch/Lot ini. Total sisa stok: ' . $inventory->quantity . ' kg');
+                    }
 
-            if ($inventory->quantity < $requestedQuantity) {
-                return back()->withErrors(['quantity' => 'Stok tidak mencukupi di Batch/Lot ini. Total sisa stok: ' . $inventory->quantity . ' kg'])->withInput();
-            }
+                    // Deduct stock
+                    $inventory->decrement('quantity', $requestedQuantity);
 
-            // Deduct stock
-            $inventory->decrement('quantity', $requestedQuantity);
+                    // Create transaction record
+                    Transaction::create([
+                        'variety_id' => $inventory->variety_id,
+                        'inventory_id' => $inventory->id,
+                        'trx_date' => $validated['trx_date'],
+                        'trx_type' => 'keluar',
+                        'category' => $validated['category'],
+                        'quantity' => $requestedQuantity,
+                        'note' => $validated['note'],
+                    ]);
+                }
+            });
 
-            // Create transaction record
-            Transaction::create([
-                'variety_id' => $inventory->variety_id,
-                'inventory_id' => $inventory->id,
-                'trx_date' => $validated['trx_date'],
-                'trx_type' => 'keluar',
-                'category' => $validated['category'],
-                'quantity' => $requestedQuantity,
-                'note' => $validated['note'],
-            ]);
+            $msg = $validated['trx_type'] == 'masuk' 
+                ? 'Transaksi masuk berhasil dicatat dan stok ditambahkan.' 
+                : 'Transaksi keluar berhasil disimpan dan stok dikurangi dari Lot/Batch yang dipilih.';
+            return redirect()->route('transactions.index')->with('success', $msg);
 
-            return redirect()->route('transactions.index')->with('success', 'Transaksi keluar berhasil disimpan dan stok dikurangi dari Lot/Batch yang dipilih.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['quantity' => $e->getMessage()])->withInput();
         }
     }
 
 
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $transaction = Transaction::with('variety')->findOrFail($id);
-        $varieties = Variety::all();
-        $locations = Location::all();
-        
-        return view('transactions.edit', compact('transaction', 'varieties', 'locations'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $validated = $request->validate([
-            'trx_date' => 'required|date',
-            'quantity' => 'required|integer|min:1',
-            'note' => 'nullable|string',
-        ]);
-
-        $transaction = Transaction::findOrFail($id);
-        $varietyId = $transaction->variety_id;
-        $requestedQuantity = $validated['quantity'];
-
-        if ($transaction->trx_type == 'keluar') {
-            $keluarValidated = $request->validate([
-                'category' => 'required|in:penjualan,diseminasi',
-            ]);
-            $validated['category'] = $keluarValidated['category'];
-
-            // 1. Revert old transaction
-            $inventoryToRevert = Inventory::find($transaction->inventory_id);
-
-            if ($inventoryToRevert) {
-                $inventoryToRevert->increment('quantity', $transaction->quantity);
-            }
-
-            // 2. Apply new transaction quantity
-            if ($inventoryToRevert && $inventoryToRevert->quantity < $requestedQuantity) {
-                // Re-apply old transaction to restore state
-                $inventoryToRevert->decrement('quantity', $transaction->quantity);
-                return back()->withErrors(['quantity' => 'Stok tidak mencukupi untuk perubahan ini.'])->withInput();
-            }
-            
-            if ($inventoryToRevert) {
-                $inventoryToRevert->decrement('quantity', $requestedQuantity);
-            }
-            
-            $transaction->update($validated);
-            return redirect()->route('transactions.index')->with('success', 'Transaksi keluar diperbarui dan stok disesuaikan.');
-        } else {
-            // For 'masuk' transaction, we just update the transaction log and adjust the related inventory.
-            $diff = $requestedQuantity - $transaction->quantity;
-            $inventoryToAdjust = Inventory::find($transaction->inventory_id);
-
-            if ($inventoryToAdjust) {
-                $inventoryToAdjust->increment('quantity', $diff);
-            }
-            
-            $transaction->update($validated);
-            return redirect()->route('transactions.index')->with('success', 'Transaksi masuk diperbarui.');
-        }
-    }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        $transaction = Transaction::findOrFail($id);
-        $varietyId = $transaction->variety_id;
+        try {
+            DB::transaction(function () use ($id) {
+                $transaction = Transaction::lockForUpdate()->findOrFail($id);
 
-        // Revert stock
-        $inventoryToRevert = Inventory::find($transaction->inventory_id);
-            
-        if ($inventoryToRevert) {
-            if ($transaction->trx_type == 'keluar') {
-                $inventoryToRevert->increment('quantity', $transaction->quantity);
-            } else {
-                $inventoryToRevert->decrement('quantity', min($inventoryToRevert->quantity, $transaction->quantity));
-            }
+                if ($transaction->trx_type == 'masuk') {
+                    // Check if this inventory has been used by any 'keluar' transactions
+                    $keluarCount = Transaction::where('inventory_id', $transaction->inventory_id)
+                        ->where('trx_type', 'keluar')
+                        ->count();
+
+                    if ($keluarCount > 0) {
+                        throw new \Exception('Tidak dapat menghapus transaksi masuk ini karena stoknya sudah digunakan pada transaksi keluar.');
+                    }
+
+                    // If not used, we can delete the transaction AND the spawned inventory
+                    $inventory = Inventory::where('id', $transaction->inventory_id)->lockForUpdate()->first();
+                    $transaction->delete();
+                    if ($inventory) {
+                        $inventory->delete();
+                    }
+                } else {
+                    // It's a 'keluar' transaction, we revert the stock back to the inventory
+                    $inventory = Inventory::where('id', $transaction->inventory_id)->lockForUpdate()->first();
+                    if ($inventory) {
+                        $inventory->increment('quantity', $transaction->quantity);
+                    }
+                    $transaction->delete();
+                }
+            });
+
+            return redirect()->route('transactions.index')->with('success', 'Transaksi berhasil dihapus dan stok disesuaikan.');
+        } catch (\Exception $e) {
+            return redirect()->route('transactions.index')->with('error', $e->getMessage());
         }
-
-        $transaction->delete();
-        return redirect()->route('transactions.index')->with('success', 'Transaksi dihapus dan stok dikembalikan.');
     }
 }

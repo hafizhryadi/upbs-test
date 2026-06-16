@@ -16,30 +16,27 @@ class ReportController extends Controller
         $year = request('year', date('Y'));
         $months = [];
         
+        $stats = Transaction::selectRaw('
+            MONTH(trx_date) as month,
+            SUM(CASE WHEN trx_type = "masuk" THEN quantity ELSE 0 END) as total_in,
+            SUM(CASE WHEN trx_type = "keluar" THEN quantity ELSE 0 END) as total_out,
+            COUNT(*) as trx_count
+        ')
+        ->whereYear('trx_date', $year)
+        ->groupBy('month')
+        ->get()
+        ->keyBy('month');
+        
         for ($m = 1; $m <= 12; $m++) {
             $date = Carbon::create($year, $m, 1);
-            
-            // Get stats for this month
-            $totalIn = Transaction::where('trx_type', 'masuk')
-                ->whereYear('trx_date', $year)
-                ->whereMonth('trx_date', $m)
-                ->sum('quantity');
-                
-            $totalOut = Transaction::where('trx_type', 'keluar')
-                ->whereYear('trx_date', $year)
-                ->whereMonth('trx_date', $m)
-                ->sum('quantity');
-                
-            $trxCount = Transaction::whereYear('trx_date', $year)
-                ->whereMonth('trx_date', $m)
-                ->count();
+            $stat = $stats->get($m);
                 
             $months[] = [
                 'month_number' => $m,
                 'month_name' => $date->locale('id')->translatedFormat('F'),
-                'total_in' => $totalIn,
-                'total_out' => $totalOut,
-                'trx_count' => $trxCount,
+                'total_in' => $stat ? $stat->total_in : 0,
+                'total_out' => $stat ? $stat->total_out : 0,
+                'trx_count' => $stat ? $stat->trx_count : 0,
             ];
         }
         
@@ -64,14 +61,12 @@ class ReportController extends Controller
         
         $firstDayOfMonth = Carbon::create($year, $month, 1)->startOfDay();
         
-        $stokAwalMasuk = \App\Models\Transaction::where('trx_type', 'masuk')
-            ->where('trx_date', '<', $firstDayOfMonth)
-            ->sum('quantity');
-        $stokAwalKeluar = \App\Models\Transaction::where('trx_type', 'keluar')
-            ->where('trx_date', '<', $firstDayOfMonth)
-            ->sum('quantity');
+        $stokAwal = \App\Models\Transaction::selectRaw('
+            SUM(CASE WHEN trx_type = "masuk" THEN quantity ELSE 0 END) as masuk,
+            SUM(CASE WHEN trx_type = "keluar" THEN quantity ELSE 0 END) as keluar
+        ')->where('trx_date', '<', $firstDayOfMonth)->first();
             
-        $stokAkhirBulanLalu = $stokAwalMasuk - $stokAwalKeluar;
+        $stokAkhirBulanLalu = ($stokAwal->masuk ?? 0) - ($stokAwal->keluar ?? 0);
 
         $transactionsMasuk = \App\Models\Transaction::with(['variety'])
             ->where('trx_type', 'masuk')

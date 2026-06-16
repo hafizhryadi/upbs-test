@@ -112,6 +112,22 @@
             </div>
         @endif
 
+        @if (session('error'))
+            <div
+                class="m-8 mb-0 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 flex items-center justify-between shadow-sm">
+                <div class="flex items-center">
+                    <div class="bg-red-100 rounded-full p-1.5 mr-3 flex items-center justify-center">
+                        <i class="bi bi-exclamation-triangle text-red-600 font-bold"></i>
+                    </div>
+                    <span class="font-medium">{{ session('error') }}</span>
+                </div>
+                <button onclick="this.parentElement.style.display='none'"
+                    class="text-red-500 hover:text-red-700 transition-colors p-1">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+        @endif
+
         <div class="p-4 md:p-8 flex-1">
             @yield('content')
         </div>
