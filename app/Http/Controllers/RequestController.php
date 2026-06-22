@@ -61,6 +61,12 @@ class RequestController extends Controller
      */
     public function show(string $id)
     {
+        $request = RequestModel::with('variety')->findOrFail($id);
+        return view('requests.show', compact('request'));
+    }
+
+    public function download(string $id)
+    {
         $request = RequestModel::findOrFail($id);
         
         if (!$request->surat_permohonan) {
@@ -80,11 +86,71 @@ class RequestController extends Controller
 
     public function updateStatus(Request $request, string $id)
     {
+        if (auth()->user()->role !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya admin yang dapat memverifikasi permohonan.');
+        }
+
         $validated = $request->validate([
             'status' => 'required|in:pending,disetujui,ditolak',
         ]);
 
-        $requestModel = RequestModel::findOrFail($id);
+        $requestModel = RequestModel::with('variety')->findOrFail($id);
+
+        if ($validated['status'] === 'disetujui' && $requestModel->status !== 'disetujui') {
+            $quantityNeeded = $requestModel->jumlah;
+            $varietyId = $requestModel->variety_id;
+
+            try {
+                \Illuminate\Support\Facades\DB::transaction(function () use ($quantityNeeded, $varietyId, $requestModel, &$pdfPath) {
+                    $inventories = \App\Models\Inventory::where('variety_id', $varietyId)
+                        ->where('quantity', '>', 0)
+                        ->orderBy('expiry_date', 'asc')
+                        ->lockForUpdate()
+                        ->get();
+
+                    $totalAvailable = $inventories->sum('quantity');
+                    if ($totalAvailable < $quantityNeeded) {
+                        throw new \Exception("Stok {$requestModel->variety->name} tidak mencukupi. Tersedia: {$totalAvailable} kg, Diminta: {$quantityNeeded} kg.");
+                    }
+
+                    $remainingToDeduct = $quantityNeeded;
+                    foreach ($inventories as $inv) {
+                        if ($remainingToDeduct <= 0) break;
+
+                        $deductAmount = min($inv->quantity, $remainingToDeduct);
+                        $inv->decrement('quantity', $deductAmount);
+
+                        \App\Models\Transaction::create([
+                            'variety_id' => $inv->variety_id,
+                            'inventory_id' => $inv->id,
+                            'trx_date' => now(),
+                            'trx_type' => 'keluar',
+                            'category' => $requestModel->jenis === 'pembelian' ? 'penjualan' : $requestModel->jenis,
+                            'quantity' => $deductAmount,
+                            'note' => 'Persetujuan Permohonan: ' . $requestModel->nama,
+                        ]);
+
+                        $remainingToDeduct -= $deductAmount;
+                    }
+
+                    // Generate PDF inside transaction to ensure consistency? Actually better outside but it's fine.
+                    $pdfFileName = 'Surat_Persetujuan_' . time() . '_' . \Illuminate\Support\Str::slug($requestModel->nama) . '.pdf';
+                    $pdfPath = 'uploads/persetujuan/' . $pdfFileName;
+
+                    if (!file_exists(public_path('uploads/persetujuan'))) {
+                        mkdir(public_path('uploads/persetujuan'), 0755, true);
+                    }
+
+                    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('requests.pdf_persetujuan', ['requestData' => $requestModel]);
+                    $pdf->save(public_path($pdfPath));
+                    
+                    $requestModel->surat_persetujuan = $pdfPath;
+                });
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Gagal memverifikasi: ' . $e->getMessage());
+            }
+        }
+
         $requestModel->status = $validated['status'];
         $requestModel->save();
 

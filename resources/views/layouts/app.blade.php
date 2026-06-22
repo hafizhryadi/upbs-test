@@ -68,9 +68,14 @@
                     Permohonan Benih
                 </a>
                 <a href="{{ route('report.index') }}"
-                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 whitespace-nowrap {{ request()->routeIs('report.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
-                    <i class="bi bi-file-earmark-text mr-3 text-lg {{ request()->routeIs('report.*') ? 'text-emerald-300' : '' }}"></i>
-                    Laporan
+                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 whitespace-nowrap {{ request()->routeIs('report.index', 'report.show') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
+                    <i class="bi bi-file-earmark-text mr-3 text-lg {{ request()->routeIs('report.index', 'report.show') ? 'text-emerald-300' : '' }}"></i>
+                    Laporan Transaksi
+                </a>
+                <a href="{{ route('report.requests') }}"
+                    class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 whitespace-nowrap {{ request()->routeIs('report.requests') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
+                    <i class="bi bi-file-earmark-bar-graph mr-3 text-lg {{ request()->routeIs('report.requests') ? 'text-emerald-300' : '' }}"></i>
+                    Laporan Permohonan
                 </a>
             </nav>
         </div>
@@ -81,8 +86,8 @@
                     <i class="bi bi-people-fill text-white"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-semibold text-white">Admin UPBS</p>
-                    <p class="text-xs text-emerald-200/80">Administrator</p>
+                    <p class="text-sm font-semibold text-white">{{ auth()->user()->name ?? 'Admin UPBS' }}</p>
+                    <p class="text-xs text-emerald-200/80">{{ auth()->check() ? ucfirst(auth()->user()->role) : 'Administrator' }}</p>
                 </div>
             </div>
             <form method="POST" action="{{ route('logout') }}" class="w-full mt-2">

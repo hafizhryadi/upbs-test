@@ -28,8 +28,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('locations', LocationController::class);
     Route::resource('inventories', InventoryController::class);
     Route::resource('transactions', TransactionController::class);
+    Route::get('/report-requests', [ReportController::class, 'requestReport'])->name('report.requests');
+    Route::get('/report-requests/{month}/download', [ReportController::class, 'downloadRequestReport'])->name('report.requests.download');
     Route::resource('report', ReportController::class);
     Route::patch('request/{request}/status', [RequestController::class, 'updateStatus'])->name('request.status');
+    Route::get('request/{request}/download', [RequestController::class, 'download'])->name('request.download');
     Route::resource('request', RequestController::class)->except(['create', 'store', 'edit', 'update', 'destroy'])->names(['index' => 'request.index']);
 });
 

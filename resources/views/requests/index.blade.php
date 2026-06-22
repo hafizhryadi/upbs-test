@@ -91,30 +91,20 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <div class="flex flex-col gap-2">
-                                    <span
-                                        class="inline-flex items-center justify-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide {{ $requestStatusClasses[$request->status] ?? 'bg-slate-100 text-slate-600 border border-slate-200' }}">
+                                    <span class="inline-flex items-center justify-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide {{ $requestStatusClasses[$request->status] ?? 'bg-slate-100 text-slate-600 border border-slate-200' }}">
                                         {{ $requestStatusLabels[$request->status] ?? ucfirst($request->status) }}
                                     </span>
-
-                                    <form action="{{ route('request.status', $request->id) }}" method="POST"
-                                        class="w-full">
-                                        @csrf
-                                        @method('PATCH')
-                                        <select name="status" onchange="this.form.submit()"
-                                            class="w-full bg-slate-100 border border-slate-200 text-slate-800 text-[13px] rounded-lg px-3 py-2 transition-all outline-none font-medium cursor-pointer">
-                                            <option value="pending" {{ $request->status === 'pending' ? 'selected' : '' }}>
-                                                Pending</option>
-                                            <option value="disetujui" {{ $request->status === 'disetujui' ? 'selected' : '' }}>Disetujui</option>
-                                            <option value="ditolak" {{ $request->status === 'ditolak' ? 'selected' : '' }}>
-                                                Ditolak</option>
-                                        </select>
-                                    </form>
+                                    <a href="{{ route('request.show', $request->id) }}"
+                                        class="inline-flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 shadow-sm font-bold text-[12px] transition-colors tooltip w-full"
+                                        title="Lihat Detail Permohonan">
+                                        <i class="bi bi-eye text-[14px]"></i> Lihat Detail
+                                    </a>
 
                                     @if ($request->surat_permohonan)
-                                        <a href="{{ route('request.show', $request->id) }}"
-                                            class="inline-flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#16a34a] hover:bg-[#15803d] text-white shadow-sm font-bold text-[12px] transition-colors tooltip w-full"
-                                            title="Unduh Surat PDF">
-                                            <i class="bi bi-file-earmark-pdf text-[14px]"></i> Unduh PDF
+                                        <a href="{{ route('request.download', $request->id) }}"
+                                            class="inline-flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#16a34a] hover:bg-[#15803d] shadow-sm font-bold text-[12px] transition-colors tooltip w-full"
+                                            title="Unduh Surat Permohonan">
+                                            <i class="bi bi-file-earmark-pdf text-[14px]"></i> Surat Permohonan
                                         </a>
                                     @else
                                         <span
@@ -122,6 +112,14 @@
                                             title="Tidak ada file surat">
                                             <i class="bi bi-dash-circle text-[14px]"></i> Tidak Ada
                                         </span>
+                                    @endif
+
+                                    @if ($request->surat_persetujuan)
+                                        <a href="{{ asset($request->surat_persetujuan) }}" target="_blank"
+                                            class="inline-flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#3b82f6] hover:bg-[#2563eb] shadow-sm font-bold text-[12px] transition-colors tooltip w-full"
+                                            title="Unduh Surat Persetujuan">
+                                            <i class="bi bi-file-earmark-check text-[14px]"></i> Surat Persetujuan
+                                        </a>
                                     @endif
                                 </div>
                             </td>

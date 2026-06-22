@@ -19,6 +19,14 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin UPBS',
             'email' => 'admin@brmp.sumsel',
             'password' => 'password',
+            'role' => 'admin',
+        ]);
+
+        User::factory()->create([
+            'name' => 'Petugas UPBS',
+            'email' => 'petugas@brmp.sumsel',
+            'password' => 'password',
+            'role' => 'petugas',
         ]);
 
         $this->call([
