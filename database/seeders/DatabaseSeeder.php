@@ -16,17 +16,17 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory()->create([
-            'name' => 'Admin UPBS',
-            'email' => 'admin@brmp.sumsel',
+            'name' => 'Pimpinan UPBS',
+            'email' => 'pimpinan@brmp.sumsel',
             'password' => 'password',
-            'role' => 'admin',
+            'role' => 'pimpinan',
         ]);
 
         User::factory()->create([
-            'name' => 'Petugas UPBS',
-            'email' => 'petugas@brmp.sumsel',
+            'name' => 'Staff UPBS',
+            'email' => 'staff@brmp.sumsel',
             'password' => 'password',
-            'role' => 'petugas',
+            'role' => 'staff',
         ]);
 
         $this->call([

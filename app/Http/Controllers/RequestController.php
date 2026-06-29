@@ -86,9 +86,6 @@ class RequestController extends Controller
 
     public function updateStatus(Request $request, string $id)
     {
-        if (auth()->user()->role !== 'admin') {
-            return redirect()->back()->with('error', 'Hanya admin yang dapat memverifikasi permohonan.');
-        }
 
         $validated = $request->validate([
             'status' => 'required|in:pending,disetujui,ditolak',

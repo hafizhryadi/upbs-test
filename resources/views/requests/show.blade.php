@@ -121,7 +121,7 @@
                         </span>
                     </div>
 
-                    @if (auth()->check() && auth()->user()->role === 'admin')
+                    @if (auth()->check() && auth()->user()->role === 'pimpinan')
                         <div class="pt-4 border-t border-slate-100">
                             <div class="text-[13px] font-bold text-slate-500 mb-3">Ubah Status</div>
                             <form action="{{ route('request.status', $request->id) }}" method="POST" class="w-full flex flex-col gap-3">

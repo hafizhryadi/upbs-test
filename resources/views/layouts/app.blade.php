@@ -42,6 +42,9 @@
                     <i class="bi bi-house mr-3 text-lg {{ request()->routeIs('dashboard') ? 'text-emerald-300' : '' }}"></i>
                     Beranda
                 </a>
+                
+                @if(auth()->user()->role === 'staff')
+
                 <a href="{{ route('locations.index') }}"
                     class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 whitespace-nowrap {{ request()->routeIs('locations.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
                     <i class="bi bi-geo-alt mr-3 text-lg {{ request()->routeIs('locations.*') ? 'text-emerald-300' : '' }}"></i>
@@ -62,11 +65,14 @@
                     <i class="bi bi-credit-card mr-3 text-lg {{ request()->routeIs('transactions.*') ? 'text-emerald-300' : '' }}"></i>
                     Input Stok
                 </a>
+                @endif
+
                 <a href="{{ route('request.index') }}"
                     class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 whitespace-nowrap {{ request()->routeIs('request.*') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
                     <i class="bi bi-clipboard-data mr-3 text-lg {{ request()->routeIs('request.*') ? 'text-emerald-300' : '' }}"></i>
                     Permohonan Benih
                 </a>
+                @if(auth()->user()->role === 'staff')
                 <a href="{{ route('report.index') }}"
                     class="flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 whitespace-nowrap {{ request()->routeIs('report.index', 'report.show') ? 'bg-[#0f7a49] text-white font-medium shadow-sm' : 'text-emerald-100/80 hover:bg-white/5 hover:text-white' }}">
                     <i class="bi bi-file-earmark-text mr-3 text-lg {{ request()->routeIs('report.index', 'report.show') ? 'text-emerald-300' : '' }}"></i>
@@ -77,6 +83,7 @@
                     <i class="bi bi-file-earmark-bar-graph mr-3 text-lg {{ request()->routeIs('report.requests') ? 'text-emerald-300' : '' }}"></i>
                     Laporan Permohonan
                 </a>
+                @endif
             </nav>
         </div>
 
@@ -87,7 +94,7 @@
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-white">{{ auth()->user()->name ?? 'Admin UPBS' }}</p>
-                    <p class="text-xs text-emerald-200/80">{{ auth()->check() ? ucfirst(auth()->user()->role) : 'Administrator' }}</p>
+                    <p class="text-xs text-emerald-200/80">{{ auth()->check() ? ucfirst(auth()->user()->role) : 'Guest' }}</p>
                 </div>
             </div>
             <form method="POST" action="{{ route('logout') }}" class="w-full mt-2">

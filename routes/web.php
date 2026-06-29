@@ -23,17 +23,28 @@ Route::get('request/success', function () {
 Route::resource('request', RequestController::class)->only(['create', 'store']);
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('varieties', VarietyController::class);
-    Route::resource('locations', LocationController::class);
-    Route::resource('inventories', InventoryController::class);
-    Route::resource('transactions', TransactionController::class);
-    Route::get('/report-requests', [ReportController::class, 'requestReport'])->name('report.requests');
-    Route::get('/report-requests/{month}/download', [ReportController::class, 'downloadRequestReport'])->name('report.requests.download');
-    Route::resource('report', ReportController::class);
-    Route::patch('request/{request}/status', [RequestController::class, 'updateStatus'])->name('request.status');
-    Route::get('request/{request}/download', [RequestController::class, 'download'])->name('request.download');
-    Route::resource('request', RequestController::class)->except(['create', 'store', 'edit', 'update', 'destroy'])->names(['index' => 'request.index']);
+    // Bisa diakses oleh kedua role
+    Route::middleware('role:pimpinan,staff')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('request/{request}/download', [RequestController::class, 'download'])->name('request.download');
+        Route::resource('request', RequestController::class)->except(['create', 'store', 'edit', 'update', 'destroy'])->names(['index' => 'request.index']);
+    });
+
+    // Hanya bisa diakses oleh staff
+    Route::middleware('role:staff')->group(function () {
+        Route::resource('varieties', VarietyController::class);
+        Route::resource('locations', LocationController::class);
+        Route::resource('inventories', InventoryController::class);
+        Route::resource('transactions', TransactionController::class);
+        Route::get('/report-requests', [ReportController::class, 'requestReport'])->name('report.requests');
+        Route::get('/report-requests/{month}/download', [ReportController::class, 'downloadRequestReport'])->name('report.requests.download');
+        Route::resource('report', ReportController::class);
+    });
+
+    // Hanya bisa diakses oleh pimpinan
+    Route::middleware('role:pimpinan')->group(function () {
+        Route::patch('request/{request}/status', [RequestController::class, 'updateStatus'])->name('request.status');
+    });
 });
 
 Route::get('storage/{path}', function ($path) {
