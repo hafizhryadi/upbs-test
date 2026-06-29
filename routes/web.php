@@ -28,6 +28,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('request/{request}/download', [RequestController::class, 'download'])->name('request.download');
         Route::resource('request', RequestController::class)->except(['create', 'store', 'edit', 'update', 'destroy'])->names(['index' => 'request.index']);
+        Route::resource('report', ReportController::class);
+        Route::get('/report-requests', [ReportController::class, 'requestReport'])->name('report.requests');
+        Route::get('/report-requests/{month}/download', [ReportController::class, 'downloadRequestReport'])->name('report.requests.download');
     });
 
     // Hanya bisa diakses oleh staff
@@ -36,9 +39,6 @@ Route::middleware('auth')->group(function () {
         Route::resource('locations', LocationController::class);
         Route::resource('inventories', InventoryController::class);
         Route::resource('transactions', TransactionController::class);
-        Route::get('/report-requests', [ReportController::class, 'requestReport'])->name('report.requests');
-        Route::get('/report-requests/{month}/download', [ReportController::class, 'downloadRequestReport'])->name('report.requests.download');
-        Route::resource('report', ReportController::class);
     });
 
     // Hanya bisa diakses oleh pimpinan
