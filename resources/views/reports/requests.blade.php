@@ -61,6 +61,8 @@
                             <span class="inline-block w-2 h-2 rounded-full bg-slate-300"></span>
                         @endif
                     </div>
+                </div>
+
                 <div class="p-4 bg-white border-t border-slate-100 mt-auto">
                     <a href="{{ route('report.requests.download', ['month' => $month['month_number'], 'year' => $year]) }}"
                         class="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg {{ $month['trx_count'] > 0 ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm' : 'bg-slate-100 text-slate-400 pointer-events-none' }} font-semibold text-[14px] transition-colors">
